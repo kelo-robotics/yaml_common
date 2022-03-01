@@ -10,7 +10,14 @@ find_package(catkin REQUIRED COMPONENTS
 
 find_package (yaml-cpp REQUIRED)
 
-catkin_package()
+catkin_package(
+    CATKIN_DEPENDS
+        geometry_common
+    INCLUDE_DIRS
+        include
+    LIBRARIES
+        yaml_common
+)
 
 # The documentation build option set to OFF by default
 option(BUILD_DOC "Build documentation" OFF)
@@ -49,4 +56,15 @@ add_library(yaml_common
 
 target_link_libraries(yaml_common
     ${catkin_LIBRARIES}
+)
+# =======
+# INSTALL
+# =======
+install(TARGETS yaml_common
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+
+install(DIRECTORY include/${PROJECT_NAME}/
+  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
 )
