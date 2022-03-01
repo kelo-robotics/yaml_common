@@ -64,7 +64,7 @@ class Parser
      * @return bool True if there exists a key-value pair corresponding to
      * the input key and the value of this pair is a Map data structure
      */
-    static bool yamlHasMap(const YAML::Node& node, std::string key);
+    static bool hasMap(const YAML::Node& node, std::string key);
 
     /**
      * @brief Checks if a YAML Node contains a key-value pair corresponding
@@ -78,7 +78,7 @@ class Parser
      * value of this pair is an integer. \n
      * 2. The input key was an empty string and the input node is an integer
      */
-    static bool yamlHasInt(const YAML::Node& node, std::string key = "");
+    static bool hasInt(const YAML::Node& node, std::string key = "");
 
     /**
      * @brief Checks if a YAML Node contains a key-value pair corresponding
@@ -92,7 +92,7 @@ class Parser
      * value of this pair is a double. \n
      * 2. The input key was an empty string and the input node is a double
      */
-    static bool yamlHasDouble(const YAML::Node& node, std::string key = "");
+    static bool hasDouble(const YAML::Node& node, std::string key = "");
 
     /**
      * @brief Checks if a YAML Node contains a key-value pair corresponding
@@ -106,7 +106,7 @@ class Parser
      * value of this pair is a bool. \n
      * 2. The input key was an empty string and the input node is a bool
      */
-    static bool yamlHasBool(const YAML::Node& node, std::string key = "");
+    static bool hasBool(const YAML::Node& node, std::string key = "");
 
     /**
      * @brief Checks if a YAML Node contains a key-value pair corresponding
@@ -117,7 +117,7 @@ class Parser
      * @return bool True if there exists a key-value pair corresponding to
      * the input key and the value of this pair is a string
      */
-    static bool yamlHasString(const YAML::Node& node, std::string key);
+    static bool hasString(const YAML::Node& node, std::string key);
 
     /**
      * @brief Checks if the YAML node represents 2D pose information
@@ -125,7 +125,7 @@ class Parser
      * @param node The YAML node to be checked
      * @return bool True if the node represents a 2D pose
      */
-    static bool yamlHasPose(const YAML::Node& node);
+    static bool hasPose(const YAML::Node& node);
 
     /**
      * @brief Checks if a YAML Node contains a key-value pair corresponding
@@ -137,7 +137,7 @@ class Parser
      * @return bool True if there exists a key-value pair corresponding to
      * the input key and the value of this pair represents a 2D Pose
      */
-    static bool yamlHasPose(const YAML::Node& node, std::string key);
+    static bool hasPose(const YAML::Node& node, std::string key);
 
     /**
      * @brief Checks if a YAML Node contains a key-value pair corresponding
@@ -150,7 +150,7 @@ class Parser
      * @return bool True if there exists a key-value pair corresponding to
      * the input key and the value of this pair represents time information
      */
-    static bool yamlHasTime(const YAML::Node& node, std::string key);
+    static bool hasTime(const YAML::Node& node, std::string key);
 
     /**
      * @brief If a YAML Node contains a key-value pair corresponding to the
@@ -164,7 +164,7 @@ class Parser
      * @return int The parsed integer value if parsing was successful, else
      * returns 0
      */
-    static int yamlGetInt(const YAML::Node& node, std::string key = "");
+    static int getInt(const YAML::Node& node, std::string key = "");
 
     /**
      * @brief If a YAML Node contains a key-value pair corresponding to the
@@ -178,7 +178,7 @@ class Parser
      * @return double The parsed double value if parsing was successful, else
      * returns 0.0
      */
-    static double yamlGetDouble(const YAML::Node& node, std::string key = "");
+    static double getDouble(const YAML::Node& node, std::string key = "");
 
     /**
      * @brief If a YAML Node contains a key-value pair corresponding to the
@@ -194,7 +194,7 @@ class Parser
      * @return bool The parsed bool value if parsing was successful, else
      * returns the default value
      */
-    static bool yamlGetBool(const YAML::Node& node, std::string key = "",
+    static bool getBool(const YAML::Node& node, std::string key = "",
                             bool defaultValue = false);
 
     /**
@@ -209,7 +209,7 @@ class Parser
      * @return std::string The parsed string value if parsing was successful,
      * else returns an empty string
      */
-    static std::string yamlGetString(const YAML::Node& node,
+    static std::string getString(const YAML::Node& node,
                                      std::string key = "");
 
     /**
@@ -219,7 +219,7 @@ class Parser
      * @return geometry_common::Pose2d If parsing was successful, returns the
      * parsed 2D pose object, else returns a 'zero' 2D pose
      */
-    static geometry_common::Pose2d yamlGetPose(const YAML::Node& node);
+    static geometry_common::Pose2d getPose(const YAML::Node& node);
 
     /**
      * @brief Parse a value of a key-value pair inside a YAML node into a 2D
@@ -231,7 +231,7 @@ class Parser
      * @return geometry_common::Pose2d If parsing was successful, returns the
      * parsed 2D pose object, else returns a 'zero' 2D pose
      */
-    static geometry_common::Pose2d yamlGetPose(const YAML::Node& node,
+    static geometry_common::Pose2d getPose(const YAML::Node& node,
                                                std::string key);
 
     /**
@@ -243,7 +243,7 @@ class Parser
      * @return long long If parsing was successful, returns the parsed time
      * data, else returns 0
      */
-    static long long yamlGetTime(const YAML::Node& node, std::string key);
+    static long long getTime(const YAML::Node& node, std::string key);
 
     /**
      * @brief Get the length of a list data structure represented as a YAML Node
@@ -252,7 +252,7 @@ class Parser
      * @return unsigned int If the node could be parsed as a list, returns the
      * length of the list, else returns 0
      */
-    static unsigned int yamlGetLength(const YAML::Node& node);
+    static unsigned int getLength(const YAML::Node& node);
 
     /**
      * @brief Get the length of a list data structure defined as the value of a
@@ -263,7 +263,7 @@ class Parser
      * @return unsigned int If the YAML data could be parsed as a list, returns
      * the length of the list, else returns 0
      */
-    static unsigned int yamlGetLength(const YAML::Node& node, std::string key);
+    static unsigned int getLength(const YAML::Node& node, std::string key);
 
     /**
      * @brief Get a list of all the keys in the YAML node representing a Map

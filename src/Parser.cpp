@@ -43,7 +43,7 @@
 namespace kelo::yaml_common
 {
 
-bool Parser::yamlHasMap(const YAML::Node& node, std::string key)
+bool Parser::hasMap(const YAML::Node& node, std::string key)
 {
     if (!node.IsMap() || !node[key])
         return false;
@@ -51,7 +51,7 @@ bool Parser::yamlHasMap(const YAML::Node& node, std::string key)
     return node[key].IsMap();
 }
 
-bool Parser::yamlHasInt(const YAML::Node& node, std::string key)
+bool Parser::hasInt(const YAML::Node& node, std::string key)
 {
     try
     {
@@ -68,7 +68,7 @@ bool Parser::yamlHasInt(const YAML::Node& node, std::string key)
     return false;
 }
 
-bool Parser::yamlHasDouble(const YAML::Node& node, std::string key)
+bool Parser::hasDouble(const YAML::Node& node, std::string key)
 {
     try
     {
@@ -85,7 +85,7 @@ bool Parser::yamlHasDouble(const YAML::Node& node, std::string key)
     return false;
 }
 
-bool Parser::yamlHasString(const YAML::Node& node, std::string key)
+bool Parser::hasString(const YAML::Node& node, std::string key)
 {
     if (!node.IsMap() || !node[key]) // TODO check if correct
         return false;
@@ -93,7 +93,7 @@ bool Parser::yamlHasString(const YAML::Node& node, std::string key)
     return node[key].IsScalar();
 }
 
-bool Parser::yamlHasBool(const YAML::Node& node, std::string key)
+bool Parser::hasBool(const YAML::Node& node, std::string key)
 {
     try
     {
@@ -110,7 +110,7 @@ bool Parser::yamlHasBool(const YAML::Node& node, std::string key)
     return false;
 }
 
-int Parser::yamlGetInt(const YAML::Node& node, std::string key)
+int Parser::getInt(const YAML::Node& node, std::string key)
 {
     int i = 0;
     try
@@ -127,7 +127,7 @@ int Parser::yamlGetInt(const YAML::Node& node, std::string key)
     return i;
 }
 
-double Parser::yamlGetDouble(const YAML::Node& node, std::string key)
+double Parser::getDouble(const YAML::Node& node, std::string key)
 {
     double d = 0;
     try
@@ -144,7 +144,7 @@ double Parser::yamlGetDouble(const YAML::Node& node, std::string key)
     return d;
 }
 
-std::string Parser::yamlGetString(const YAML::Node& node, std::string key)
+std::string Parser::getString(const YAML::Node& node, std::string key)
 {
     try
     {
@@ -164,7 +164,7 @@ std::string Parser::yamlGetString(const YAML::Node& node, std::string key)
     return "";
 }
 
-bool Parser::yamlGetBool(const YAML::Node& node, std::string key,
+bool Parser::getBool(const YAML::Node& node, std::string key,
                          bool defaultValue)
 {
     bool b = defaultValue;
@@ -182,7 +182,7 @@ bool Parser::yamlGetBool(const YAML::Node& node, std::string key,
     return b;
 }
 
-unsigned int Parser::yamlGetLength(const YAML::Node& node, std::string key)
+unsigned int Parser::getLength(const YAML::Node& node, std::string key)
 {
     if (!node || !node[key] || !node[key].IsSequence())
         return 0;
@@ -190,7 +190,7 @@ unsigned int Parser::yamlGetLength(const YAML::Node& node, std::string key)
     return node[key].size();
 }
 
-unsigned int Parser::yamlGetLength(const YAML::Node& node)
+unsigned int Parser::getLength(const YAML::Node& node)
 {
     if (!node || !node.IsSequence())
         return 0;
@@ -208,23 +208,23 @@ std::vector<std::string> Parser::getAllKeys(const YAML::Node& node)
     return keys;
 }
 
-bool Parser::yamlHasPose(const YAML::Node& node, std::string key)
+bool Parser::hasPose(const YAML::Node& node, std::string key)
 {
     return (node[key] && node[key].IsSequence() && node[key].size() == 3 &&
             node[key][0].IsScalar() && node[key][1].IsScalar() &&
             node[key][2].IsScalar());
 }
 
-bool Parser::yamlHasPose(const YAML::Node& node)
+bool Parser::hasPose(const YAML::Node& node)
 {
     return (node && node.IsSequence() && node.size() == 3 &&
             node[0].IsScalar() && node[1].IsScalar() && node[2].IsScalar());
 }
 
-geometry_common::Pose2d Parser::yamlGetPose(const YAML::Node& node,
+geometry_common::Pose2d Parser::getPose(const YAML::Node& node,
                                             std::string key)
 {
-    if (!yamlHasPose(node, key))
+    if (!hasPose(node, key))
         return geometry_common::Pose2d();
 
     const YAML::Node& p = node[key];
@@ -232,28 +232,28 @@ geometry_common::Pose2d Parser::yamlGetPose(const YAML::Node& node,
                                    p[2].as<double>());
 }
 
-geometry_common::Pose2d Parser::yamlGetPose(const YAML::Node& node)
+geometry_common::Pose2d Parser::getPose(const YAML::Node& node)
 {
-    if (!yamlHasPose(node))
+    if (!hasPose(node))
         return geometry_common::Pose2d();
 
     return geometry_common::Pose2d(node[0].as<double>(), node[1].as<double>(),
                                    node[2].as<double>());
 }
 
-bool Parser::yamlHasTime(const YAML::Node& node, std::string key)
+bool Parser::hasTime(const YAML::Node& node, std::string key)
 {
-    return (node[key] && node[key].IsMap() && yamlHasInt(node[key], "high") &&
-            yamlHasInt(node[key], "low"));
+    return (node[key] && node[key].IsMap() && hasInt(node[key], "high") &&
+            hasInt(node[key], "low"));
 }
 
-long long Parser::yamlGetTime(const YAML::Node& node, std::string key)
+long long Parser::getTime(const YAML::Node& node, std::string key)
 {
-    if (!yamlHasTime(node, key))
+    if (!hasTime(node, key))
         return 0;
 
-    unsigned int low = (unsigned int)yamlGetInt(node[key], "low");
-    unsigned int high = (unsigned int)yamlGetInt(node[key], "high");
+    unsigned int low = (unsigned int)getInt(node[key], "low");
+    unsigned int high = (unsigned int)getInt(node[key], "high");
 
     return (((long long)high) << 32) + low;
 }
@@ -283,18 +283,18 @@ void Parser::copyYaml(const YAML::Node& values, YAML::Emitter& yaml,
                     }
                     else
                     {
-                        if (yamlHasInt(it->second))
+                        if (hasInt(it->second))
                             yaml << YAML::Key << key << YAML::Value
-                                 << yamlGetInt(it->second);
-                        else if (yamlHasDouble(it->second))
+                                 << getInt(it->second);
+                        else if (hasDouble(it->second))
                             yaml << YAML::Key << key << YAML::Value
-                                 << yamlGetDouble(it->second);
-                        else if (yamlHasBool(it->second))
+                                 << getDouble(it->second);
+                        else if (hasBool(it->second))
                             yaml << YAML::Key << key << YAML::Value
-                                 << yamlGetBool(it->second);
+                                 << getBool(it->second);
                         else
                             yaml << YAML::Key << key << YAML::Value
-                                 << yamlGetString(it->second);
+                                 << getString(it->second);
                     }
                 }
                 else if (it->second.IsMap())
@@ -327,14 +327,14 @@ void Parser::copyYaml(const YAML::Node& values, YAML::Emitter& yaml,
                 }
                 else
                 {
-                    if (yamlHasInt(*it))
-                        yaml << yamlGetInt(*it);
-                    else if (yamlHasDouble(*it))
-                        yaml << yamlGetDouble(*it);
-                    else if (yamlHasBool(*it))
-                        yaml << yamlGetBool(*it);
+                    if (hasInt(*it))
+                        yaml << getInt(*it);
+                    else if (hasDouble(*it))
+                        yaml << getDouble(*it);
+                    else if (hasBool(*it))
+                        yaml << getBool(*it);
                     else
-                        yaml << yamlGetString(*it);
+                        yaml << getString(*it);
                 }
             }
             else if (it->IsMap())
