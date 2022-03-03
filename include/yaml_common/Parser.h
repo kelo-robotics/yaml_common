@@ -41,7 +41,7 @@
 #ifndef KELO_YAML_COMMON_PARSER_H
 #define KELO_YAML_COMMON_PARSER_H
 
-#include <geometry_common/pose_2d.h>
+#include <geometry_common/Pose2D.h>
 #include <yaml-cpp/yaml.h>
 
 namespace kelo::yaml_common
@@ -216,10 +216,10 @@ class Parser
      * @brief Parse a YAML node into a 2D pose object
      *
      * @param node The YAML node to be parsed
-     * @return geometry_common::Pose2d If parsing was successful, returns the
+     * @return geometry_common::Pose2D If parsing was successful, returns the
      * parsed 2D pose object, else returns a 'zero' 2D pose
      */
-    static geometry_common::Pose2d getPose(const YAML::Node& node);
+    static geometry_common::Pose2D getPose(const YAML::Node& node);
 
     /**
      * @brief Parse a value of a key-value pair inside a YAML node into a 2D
@@ -228,10 +228,10 @@ class Parser
      * @param node The YAML node to be parsed
      * @param key The key of the key-value pair that must be parsed as a 2D pose
      * object
-     * @return geometry_common::Pose2d If parsing was successful, returns the
+     * @return geometry_common::Pose2D If parsing was successful, returns the
      * parsed 2D pose object, else returns a 'zero' 2D pose
      */
-    static geometry_common::Pose2d getPose(const YAML::Node& node,
+    static geometry_common::Pose2D getPose(const YAML::Node& node,
                                                std::string key);
 
     /**
