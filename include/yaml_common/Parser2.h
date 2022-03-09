@@ -108,6 +108,22 @@ class Parser2
             return ( Parser2::read(node, value, false) ) ? value : default_value;
         }
 
+        static bool readKeysAsFloats(
+                const YAML::Node& node,
+                const std::vector<std::string>& keys,
+                std::vector<float>& values,
+                bool print_error_msg = true);
+
+        static bool performSanityChecks(
+                const YAML::Node& node,
+                const std::string& key,
+                bool print_error_msg = true);
+
+        static bool performSanityChecksObject(
+                const YAML::Node& node,
+                const std::string& key,
+                bool print_error_msg = true);
+
         /**
          * function aliases for backward compatibility
          */

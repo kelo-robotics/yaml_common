@@ -48,58 +48,18 @@ template <typename T>
 bool Parser2::read(const YAML::Node& node, const std::string& key,
                    T& value, bool print_error_msg)
 {
-    if ( key.empty() )
+    if ( !Parser2::performSanityChecks(node, key, print_error_msg) )
+    {
+        return false;
+    }
+    if ( !read<T>(node[key], value, print_error_msg) )
     {
         if ( print_error_msg )
         {
-            std::cout << "[Parser2] Given key is empty" << std::endl;
+            std::cout << "[Parser2] Could not YAML::Node with key " << key << std::endl;
         }
         return false;
     }
-
-    if ( !node.IsMap() )
-    {
-        if ( print_error_msg )
-        {
-            std::cout << "[Parser2] Given YAML::Node is not a map" << std::endl;
-        }
-        return false;
-    }
-    
-    if ( !node[key] )
-    {
-        if ( print_error_msg )
-        {
-            std::cout << "[Parser2] Given YAML::Node does not have key "
-                      << key << std::endl;
-        }
-        return false;
-    }
-
-    if ( !node[key].IsScalar() )
-    {
-        if ( print_error_msg )
-        {
-            std::cout << "[Parser2] Given YAML::Node with key " << key
-                      << " is not scalar" << std::endl;
-        }
-        return false;
-    }
-
-    try
-    {
-        value = node[key].as<T>();
-    }
-    catch ( YAML::Exception& )
-    {
-        if ( print_error_msg )
-        {
-            std::cout << "[Parser2] Could not read value from YAML::Node with key "
-                      << key << std::endl;
-        }
-        return false;
-    }
-
     return true;
 }
 template bool Parser2::read(const YAML::Node& node, const std::string& key,
@@ -114,65 +74,6 @@ template bool Parser2::read(const YAML::Node& node, const std::string& key,
                             bool& value, bool print_error_msg);
 template bool Parser2::read(const YAML::Node& node, const std::string& key,
                             std::string& value, bool print_error_msg);
-
-bool Parser2::read(const YAML::Node& node, const std::string& key,
-                   geometry_common::Point2D& value, bool print_error_msg)
-{
-    if ( key.empty() )
-    {
-        if ( print_error_msg )
-        {
-            std::cout << "[Parser2] Given key is empty" << std::endl;
-        }
-        return false;
-    }
-
-    if ( !node.IsMap() )
-    {
-        if ( print_error_msg )
-        {
-            std::cout << "[Parser2] Given YAML::Node is not a map" << std::endl;
-        }
-        return false;
-    }
-
-    if ( !node[key] )
-    {
-        if ( print_error_msg )
-        {
-            std::cout << "[Parser2] Given YAML::Node does not have key "
-                      << key << std::endl;
-        }
-        return false;
-    }
-
-    if ( !node[key].IsMap() )
-    {
-        if ( print_error_msg )
-        {
-            std::cout << "[Parser2] Given YAML::Node with key " << key
-                      << " is not a map" << std::endl;
-        }
-        return false;
-    }
-
-    try
-    {
-        value.x = node[key]["x"].as<float>();
-        value.y = node[key]["y"].as<float>();
-    }
-    catch ( YAML::Exception& )
-    {
-        if ( print_error_msg )
-        {
-            std::cout << "[Parser2] Could not read value from YAML::Node with key "
-                      << key << std::endl;
-        }
-        return false;
-    }
-
-    return true;
-}
 
 template <typename T>
 bool Parser2::read(const YAML::Node& node, T& value, bool print_error_msg)
@@ -208,8 +109,34 @@ template bool Parser2::read(const YAML::Node& node, unsigned int& value, bool pr
 template bool Parser2::read(const YAML::Node& node, bool& value, bool print_error_msg);
 template bool Parser2::read(const YAML::Node& node, std::string& value, bool print_error_msg);
 
+bool Parser2::read(const YAML::Node& node, const std::string& key,
+                   geometry_common::Point2D& value, bool print_error_msg)
+{
+    if ( !Parser2::performSanityChecksObject(node, key, print_error_msg) )
+    {
+        return false;
+    }
+    return read(node[key], value, print_error_msg);
+}
+
 bool Parser2::read(const YAML::Node& node, geometry_common::Point2D& value,
                    bool print_error_msg)
+{
+    std::vector<std::string> keys{"x", "y"};
+    std::vector<float> values;
+    if ( !Parser2::readKeysAsFloats(node, keys, values, print_error_msg) )
+    {
+        return false;
+    }
+
+    value.x = values[0];
+    value.y = values[1];
+    return true;
+}
+
+bool Parser2::readKeysAsFloats(
+        const YAML::Node& node, const std::vector<std::string>& keys,
+        std::vector<float>& values, bool print_error_msg)
 {
     if ( !node.IsMap() )
     {
@@ -220,25 +147,84 @@ bool Parser2::read(const YAML::Node& node, geometry_common::Point2D& value,
         return false;
     }
 
-    if ( !node["x"] || !node["y"] )
+    values.resize(keys.size());
+    for ( size_t i = 0; i < keys.size(); i++ )
+    {
+        // check if key exists
+        if ( !node[keys[i]] )
+        {
+            if ( print_error_msg )
+            {
+                std::cout << "[Parser2] Given YAML::Node does not have key "
+                          << keys[i] << std::endl;
+            }
+            return false;
+        }
+
+        if ( !Parser2::read<float>(node[keys[i]], values[i], print_error_msg) )
+        {
+            if ( print_error_msg )
+            {
+                std::cout << "[Parser2] Could not read value of key"
+                          << keys[i] << std::endl;
+            }
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool Parser2::performSanityChecks(const YAML::Node& node, const std::string& key,
+                                  bool print_error_msg)
+{
+    if ( key.empty() )
     {
         if ( print_error_msg )
         {
-            std::cout << "[Parser2] Given YAML::Node does not all required keys" << std::endl;
+            std::cout << "[Parser2] Given key is empty" << std::endl;
         }
         return false;
     }
 
-    try
-    {
-        value.x = node["x"].as<float>();
-        value.y = node["y"].as<float>();
-    }
-    catch ( YAML::Exception& )
+    if ( !node.IsMap() )
     {
         if ( print_error_msg )
         {
-            std::cout << "[Parser2] Could not read Point2D from YAML::Node" << std::endl;
+            std::cout << "[Parser2] Given YAML::Node is not a map" << std::endl;
+        }
+        return false;
+    }
+
+    if ( !node[key] )
+    {
+        if ( print_error_msg )
+        {
+            std::cout << "[Parser2] Given YAML::Node does not have key "
+                      << key << std::endl;
+        }
+        return false;
+    }
+
+    return true;
+}
+
+bool Parser2::performSanityChecksObject(
+        const YAML::Node& node,
+        const std::string& key,
+        bool print_error_msg)
+{
+    if ( !Parser2::performSanityChecks(node, key, print_error_msg) )
+    {
+        return false;
+    }
+
+    if ( !node[key].IsMap() )
+    {
+        if ( print_error_msg )
+        {
+            std::cout << "[Parser2] Given YAML::Node with key " << key
+                      << " is not a map" << std::endl;
         }
         return false;
     }

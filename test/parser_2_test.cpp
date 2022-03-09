@@ -151,6 +151,11 @@ TEST(Parser2Test, geometry_common_datatypes)
     point2d_yaml["x"] = 5.0f;
     point2d_yaml["y"] = 6.0f;
     node["point2d"] = point2d_yaml;
+    YAML::Node incomplete_point2d_yaml;
+    incomplete_point2d_yaml["x"] = 5.0f;
+    YAML::Node wrong_point2d_yaml;
+    wrong_point2d_yaml["x"] = 5.0f;
+    wrong_point2d_yaml["y"] = "abc";
 
     Point2D true_point_2d(5.0f, 6.0f);
     Point2D default_point_2d(2.0f, 3.0f);
@@ -163,6 +168,10 @@ TEST(Parser2Test, geometry_common_datatypes)
     EXPECT_EQ(Parser::read(node["i"], test_point_2d), false); // read value directly from node with another key with value int
     EXPECT_EQ(test_point_2d, default_point_2d); // check if value is not overwritten
     EXPECT_EQ(Parser::read(node["point2d2"], test_point_2d), false); // read value directly from node with incorrect key
+    EXPECT_EQ(test_point_2d, default_point_2d); // check if value is not overwritten
+    EXPECT_EQ(Parser::read(incomplete_point2d_yaml, test_point_2d), false); // read value directly from node with missing keys
+    EXPECT_EQ(test_point_2d, default_point_2d); // check if value is not overwritten
+    EXPECT_EQ(Parser::read(wrong_point2d_yaml, test_point_2d), false); // read value directly from node with key with value string
     EXPECT_EQ(test_point_2d, default_point_2d); // check if value is not overwritten
     EXPECT_EQ(Parser::read(node["point2d"], test_point_2d), true); // read value directly from node with correct key
     EXPECT_EQ(test_point_2d, true_point_2d); // check if value is read correctly
