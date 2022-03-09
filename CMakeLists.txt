@@ -55,13 +55,32 @@ include_directories(
     ${YAML_CPP_INCLUDE_DIRS}
 )
 
+# =========
+# LIBRARIES
+# =========
 add_library(yaml_common
     src/Parser.cpp
+    src/Parser2.cpp
 )
 
 target_link_libraries(yaml_common
     ${catkin_LIBRARIES}
+    ${YAML_CPP_LIBRARIES}
 )
+
+# =====
+# TESTS
+# =====
+if (CATKIN_ENABLE_TESTING)
+    catkin_add_gtest(parser_2_test
+        test/parser_2_test.cpp
+    )
+    target_link_libraries(parser_2_test
+        yaml_common
+    )
+endif ()
+
+
 # =======
 # INSTALL
 # =======
