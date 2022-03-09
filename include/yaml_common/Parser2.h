@@ -44,6 +44,7 @@
 #include <yaml-cpp/yaml.h>
 
 #include <geometry_common/Point2D.h>
+#include <geometry_common/Point3D.h>
 
 namespace kelo::yaml_common
 {
@@ -72,6 +73,11 @@ class Parser2
         static bool read(
                 const YAML::Node& node,
                 geometry_common::Point2D& value,
+                bool print_error_msg = true);
+
+        static bool read(
+                const YAML::Node& node,
+                geometry_common::Point3D& value,
                 bool print_error_msg = true);
 
         template <typename T>
