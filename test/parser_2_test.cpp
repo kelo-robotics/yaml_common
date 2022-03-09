@@ -160,9 +160,9 @@ TEST(Parser2Test, geometry_common_datatypes)
     Point2D true_point_2d(5.0f, 6.0f);
     Point2D default_point_2d(2.0f, 3.0f);
     Point2D test_point_2d = default_point_2d;
-    EXPECT_EQ(Parser::read(node, "point2d2", test_point_2d), false); // read from map but with incorrect key
+    EXPECT_EQ(Parser::read<Point2D>(node, "point2d2", test_point_2d), false); // read from map but with incorrect key
     EXPECT_EQ(test_point_2d, default_point_2d); // check if value is not overwritten
-    EXPECT_EQ(Parser::read(node, "point2d", test_point_2d), true); // read from map with correct key
+    EXPECT_EQ(Parser::read<Point2D>(node, "point2d", test_point_2d), true); // read from map with correct key
     EXPECT_EQ(test_point_2d, true_point_2d); // check if value is read correctly
     test_point_2d = default_point_2d;
     EXPECT_EQ(Parser::read(node["i"], test_point_2d), false); // read value directly from node with another key with value int

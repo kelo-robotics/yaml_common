@@ -63,12 +63,6 @@ class Parser2
                 T& value,
                 bool print_error_msg = true);
 
-        static bool read(
-                const YAML::Node& node,
-                const std::string& key,
-                geometry_common::Point2D& value,
-                bool print_error_msg = true);
-
         template <typename T>
         static bool read(
                 const YAML::Node& node,
@@ -115,11 +109,6 @@ class Parser2
                 bool print_error_msg = true);
 
         static bool performSanityChecks(
-                const YAML::Node& node,
-                const std::string& key,
-                bool print_error_msg = true);
-
-        static bool performSanityChecksObject(
                 const YAML::Node& node,
                 const std::string& key,
                 bool print_error_msg = true);
