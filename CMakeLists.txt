@@ -1,8 +1,13 @@
 cmake_minimum_required(VERSION 3.10.2)
 project(yaml_common)
 
-add_compile_options(-std=c++11)
-set(CMAKE_CXX_FLAGS "-Wall -Wextra -Wno-unused-variable")
+add_compile_options(-std=c++11 -Wall -Wextra)
+
+if (WIN32)
+    find_package(yaml-cpp REQUIRED)
+else (WIN32)
+    set(YAML_CPP_LIBRARIES yaml-cpp)
+endif (WIN32)
 
 find_package(catkin REQUIRED COMPONENTS
     geometry_common
