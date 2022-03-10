@@ -41,7 +41,9 @@
 #include <iostream>
 #include <yaml_common/Parser2.h>
 
-namespace kelo::yaml_common
+namespace kelo
+{
+namespace yaml_common
 {
 
 template <typename T>
@@ -428,4 +430,5 @@ YAML::Node Parser2::mergeYAML(const YAML::Node& default_node,
     return YAML::Node(new_node);
 }
 
-} // namespace kelo::yaml_common
+} // namespace yaml_common
+} // namespace kelo

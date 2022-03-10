@@ -54,7 +54,9 @@
 #include <geometry_common/Polyline2D.h>
 #include <geometry_common/Polygon2D.h>
 
-namespace kelo::yaml_common
+namespace kelo
+{
+namespace yaml_common
 {
 
 /**
@@ -173,6 +175,6 @@ class Parser2
 
 };
 
-} // namespace kelo::yaml_common
-
+} // namespace yaml_common
+} // namespace kelo
 #endif // KELO_YAML_COMMON_PARSER_2_H
