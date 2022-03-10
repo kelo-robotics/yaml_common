@@ -83,6 +83,12 @@ template bool Parser2::read(const YAML::Node& node, const std::string& key,
                             geometry_common::XYTheta& value, bool print_error_msg);
 template bool Parser2::read(const YAML::Node& node, const std::string& key,
                             geometry_common::Pose2D& value, bool print_error_msg);
+template bool Parser2::read(const YAML::Node& node, const std::string& key,
+                            geometry_common::TransformMatrix2D& value,
+                            bool print_error_msg);
+template bool Parser2::read(const YAML::Node& node, const std::string& key,
+                            geometry_common::TransformMatrix3D& value,
+                            bool print_error_msg);
 
 template <typename T>
 bool Parser2::read(const YAML::Node& node, T& value, bool print_error_msg)
@@ -175,6 +181,64 @@ bool Parser2::read(const YAML::Node& node, geometry_common::Pose2D& value,
     }
     value = geometry_common::Pose2D(temp_value); // does angle clipping
     return true;
+}
+
+bool Parser2::read(const YAML::Node& node, geometry_common::TransformMatrix2D& value,
+                   bool print_error_msg)
+{
+    std::vector<std::string> keys{"x", "y", "theta"};
+    std::vector<std::string> keys_quat{"x", "y", "qx", "qy", "qz", "qw"};
+    std::vector<float> values;
+
+    if ( Parser2::readFloats(node, keys, values, false) )
+    {
+        value.update(values[0], values[1], values[2]);
+        return true;
+    }
+
+    values.clear();
+    if ( Parser2::readFloats(node, keys_quat, values, false) )
+    {
+        value.update(values[0], values[1], values[2],
+                     values[3], values[4], values[5]);
+        return true;
+    }
+
+    if ( print_error_msg )
+    {
+        std::cout << "[Parser2] Could not read TransformMatrix2D with"
+                  << " either euler or quaternion format." << std::endl;
+    }
+    return false;
+}
+
+bool Parser2::read(const YAML::Node& node, geometry_common::TransformMatrix3D& value,
+                   bool print_error_msg)
+{
+    std::vector<std::string> keys{"x", "y", "z", "roll", "pitch", "yaw"};
+    std::vector<std::string> keys_quat{"x", "y", "z", "qx", "qy", "qz", "qw"};
+    std::vector<float> values;
+    if ( Parser2::readFloats(node, keys, values, false) )
+    {
+        value.update(values[0], values[1], values[2],
+                     values[3], values[4], values[5]);
+        return true;
+    }
+
+    values.clear();
+    if ( Parser2::readFloats(node, keys_quat, values, false) )
+    {
+        value.update(values[0], values[1], values[2],
+                     values[3], values[4], values[5], values[6]);
+        return true;
+    }
+
+    if ( print_error_msg )
+    {
+        std::cout << "[Parser2] Could not read TransformMatrix3D with"
+                  << " either euler or quaternion format." << std::endl;
+    }
+    return false;
 }
 
 bool Parser2::readFloats(

@@ -47,6 +47,8 @@
 #include <geometry_common/Point3D.h>
 #include <geometry_common/XYTheta.h>
 #include <geometry_common/Pose2D.h>
+#include <geometry_common/TransformMatrix2D.h>
+#include <geometry_common/TransformMatrix3D.h>
 
 namespace kelo::yaml_common
 {
@@ -90,6 +92,16 @@ class Parser2
         static bool read(
                 const YAML::Node& node,
                 geometry_common::Pose2D& value,
+                bool print_error_msg = true);
+
+        static bool read(
+                const YAML::Node& node,
+                geometry_common::TransformMatrix2D& value,
+                bool print_error_msg = true);
+
+        static bool read(
+                const YAML::Node& node,
+                geometry_common::TransformMatrix3D& value,
                 bool print_error_msg = true);
 
         template <typename T>

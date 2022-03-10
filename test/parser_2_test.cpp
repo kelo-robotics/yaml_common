@@ -8,12 +8,16 @@
 #include <geometry_common/Point3D.h>
 #include <geometry_common/XYTheta.h>
 #include <geometry_common/Pose2D.h>
+#include <geometry_common/TransformMatrix2D.h>
+#include <geometry_common/TransformMatrix3D.h>
 
 using Parser = kelo::yaml_common::Parser2;
 using kelo::geometry_common::Point2D;
 using kelo::geometry_common::Point3D;
 using kelo::geometry_common::XYTheta;
 using kelo::geometry_common::Pose2D;
+using kelo::geometry_common::TransformMatrix2D;
+using kelo::geometry_common::TransformMatrix3D;
 
 TEST(Parser2Test, generic_datatypes)
 {
@@ -187,6 +191,37 @@ TEST(Parser2Test, geometry_common_datatypes)
     pose2d_large_theta_yaml["y"] = 6.0f;
     pose2d_large_theta_yaml["theta"] = 30.0f;
 
+    YAML::Node tfmat2d_yaml;
+    tfmat2d_yaml["x"] = 5.0f;
+    tfmat2d_yaml["y"] = 6.0f;
+    tfmat2d_yaml["theta"] = 3.0f;
+    node["tfmat2d"] = tfmat2d_yaml;
+
+    YAML::Node tfmat2d_quat_yaml;
+    tfmat2d_quat_yaml["x"] = 5.0f;
+    tfmat2d_quat_yaml["y"] = 6.0f;
+    tfmat2d_quat_yaml["qx"] = 0.0f;
+    tfmat2d_quat_yaml["qy"] = 0.0f;
+    tfmat2d_quat_yaml["qz"] = 0.0f;
+    tfmat2d_quat_yaml["qw"] = 1.0f;
+
+    YAML::Node tfmat3d_yaml;
+    tfmat3d_yaml["x"] = 5.0f;
+    tfmat3d_yaml["y"] = 6.0f;
+    tfmat3d_yaml["z"] = 7.0f;
+    tfmat3d_yaml["roll"] = 1.0f;
+    tfmat3d_yaml["pitch"] = 2.0f;
+    tfmat3d_yaml["yaw"] = 3.0f;
+    node["tfmat3d"] = tfmat3d_yaml;
+
+    YAML::Node tfmat3d_quat_yaml;
+    tfmat3d_quat_yaml["x"] = 5.0f;
+    tfmat3d_quat_yaml["y"] = 6.0f;
+    tfmat3d_quat_yaml["z"] = 7.0f;
+    tfmat3d_quat_yaml["qx"] = 0.0f;
+    tfmat3d_quat_yaml["qy"] = 0.0f;
+    tfmat3d_quat_yaml["qz"] = 0.0f;
+    tfmat3d_quat_yaml["qw"] = 1.0f;
 
     Point2D true_point_2d(5.0f, 6.0f);
     Point2D default_point_2d(2.0f, 3.0f);
@@ -284,6 +319,55 @@ TEST(Parser2Test, geometry_common_datatypes)
     EXPECT_EQ(Parser::get<Pose2D>(node["pose2d"], default_pose_2d), true_pose_2d);
     EXPECT_EQ(Parser::get<Pose2D>(node["i"], default_pose_2d), default_pose_2d);
     EXPECT_EQ(Parser::get<Pose2D>(pose2d_large_theta_yaml, default_pose_2d), Pose2D(5.0f, 6.0f, 0.0f));
+
+    TransformMatrix2D true_tf_mat_2d(5.0f, 6.0f, 3.0f);
+    TransformMatrix2D default_tf_mat_2d(2.0f, 3.0f, 1.0f);
+    TransformMatrix2D test_tf_mat_2d = default_tf_mat_2d;
+    EXPECT_EQ(Parser::read<TransformMatrix2D>(node, "tfmat2d2", test_tf_mat_2d), false); // read from map but with incorrect key
+    EXPECT_EQ(test_tf_mat_2d, default_tf_mat_2d); // check if value is not overwritten
+    EXPECT_EQ(Parser::read<TransformMatrix2D>(node, "tfmat2d", test_tf_mat_2d), true); // read from map with correct key
+    EXPECT_EQ(test_tf_mat_2d, true_tf_mat_2d); // check if value is read correctly
+    test_tf_mat_2d = default_tf_mat_2d;
+    EXPECT_EQ(Parser::read(node["i"], test_tf_mat_2d), false); // read value directly from node with another key with value int
+    EXPECT_EQ(test_tf_mat_2d, default_tf_mat_2d); // check if value is not overwritten
+    EXPECT_EQ(Parser::read(node["tfmat2d2"], test_tf_mat_2d), false); // read value from an invalid/empty node
+    EXPECT_EQ(test_tf_mat_2d, default_tf_mat_2d); // check if value is not overwritten
+    EXPECT_EQ(Parser::read(node["tfmat2d"], test_tf_mat_2d), true); // read value directly from node with correct key
+    EXPECT_EQ(test_tf_mat_2d, true_tf_mat_2d); // check if value is read correctly
+    EXPECT_EQ(Parser::has<TransformMatrix2D>(node, "tfmat2d"), true);
+    EXPECT_EQ(Parser::has<TransformMatrix2D>(node, "tfmat2d2"), false);
+    EXPECT_EQ(Parser::is<TransformMatrix2D>(node["tfmat2d"]), true);
+    EXPECT_EQ(Parser::is<TransformMatrix2D>(node["i"]), false);
+    EXPECT_EQ(Parser::get<TransformMatrix2D>(node, "tfmat2d", default_tf_mat_2d), true_tf_mat_2d);
+    EXPECT_EQ(Parser::get<TransformMatrix2D>(node, "tfmat2d2", default_tf_mat_2d), default_tf_mat_2d);
+    EXPECT_EQ(Parser::get<TransformMatrix2D>(node["tfmat2d"], default_tf_mat_2d), true_tf_mat_2d);
+    EXPECT_EQ(Parser::get<TransformMatrix2D>(node["i"], default_tf_mat_2d), default_tf_mat_2d);
+    EXPECT_EQ(Parser::get<TransformMatrix2D>(tfmat2d_quat_yaml, default_tf_mat_2d), TransformMatrix2D(5.0f, 6.0f, 0.0f));
+
+    TransformMatrix3D true_tf_mat_3d(5.0f, 6.0f, 7.0f, 1.0f, 2.0f, 3.0f);
+    TransformMatrix3D default_tf_mat_3d(3.0f, 3.0f, 3.0f, 1.0f, 1.0f, 1.0f);
+    TransformMatrix3D test_tf_mat_3d = default_tf_mat_3d;
+    EXPECT_EQ(Parser::read<TransformMatrix3D>(node, "tfmat3d2", test_tf_mat_3d), false); // read from map but with incorrect key
+    EXPECT_EQ(test_tf_mat_3d, default_tf_mat_3d); // check if value is not overwritten
+    EXPECT_EQ(Parser::read<TransformMatrix3D>(node, "tfmat3d", test_tf_mat_3d), true); // read from map with correct key
+    EXPECT_EQ(test_tf_mat_3d, true_tf_mat_3d); // check if value is read correctly
+    test_tf_mat_3d = default_tf_mat_3d;
+    EXPECT_EQ(Parser::read(node["i"], test_tf_mat_3d), false); // read value directly from node with another key with value int
+    EXPECT_EQ(test_tf_mat_3d, default_tf_mat_3d); // check if value is not overwritten
+    EXPECT_EQ(Parser::read(node["tfmat3d3"], test_tf_mat_3d), false); // read value from an invalid/empty node
+    EXPECT_EQ(test_tf_mat_3d, default_tf_mat_3d); // check if value is not overwritten
+    EXPECT_EQ(Parser::read(node["tfmat3d"], test_tf_mat_3d), true); // read value directly from node with correct key
+    EXPECT_EQ(test_tf_mat_3d, true_tf_mat_3d); // check if value is read correctly
+    EXPECT_EQ(Parser::has<TransformMatrix3D>(node, "tfmat3d"), true);
+    EXPECT_EQ(Parser::has<TransformMatrix3D>(node, "tfmat3d2"), false);
+    EXPECT_EQ(Parser::is<TransformMatrix3D>(node["tfmat3d"]), true);
+    EXPECT_EQ(Parser::is<TransformMatrix3D>(node["i"]), false);
+    EXPECT_EQ(Parser::get<TransformMatrix3D>(node, "tfmat3d", default_tf_mat_3d), true_tf_mat_3d);
+    EXPECT_EQ(Parser::get<TransformMatrix3D>(node, "tfmat3d2", default_tf_mat_3d), default_tf_mat_3d);
+    EXPECT_EQ(Parser::get<TransformMatrix3D>(node["tfmat3d"], default_tf_mat_3d), true_tf_mat_3d);
+    EXPECT_EQ(Parser::get<TransformMatrix3D>(node["i"], default_tf_mat_3d), default_tf_mat_3d);
+    EXPECT_EQ(Parser::get<TransformMatrix3D>(tfmat3d_quat_yaml, default_tf_mat_3d),
+              TransformMatrix3D(5.0f, 6.0f, 7.0f, 0.0f, 0.0f, 0.0f));
 
 }
 
