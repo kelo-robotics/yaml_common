@@ -411,12 +411,12 @@ YAML::Node Parser2::mergeYAML(const YAML::Node& default_node,
             const std::string& key = node.first.Scalar();
             if ( override_node[key] )
             {
-                new_node[node.first] = Parser2::mergeYAML(
+                new_node[node.first.Scalar()] = Parser2::mergeYAML(
                         node.second, override_node[key]);
                 continue;
             }
         }
-        new_node[node.first] = node.second;
+        new_node[node.first.Scalar()] = node.second;
     }
 
     /* Add the mappings from 'override_node' not already in 'new_node' */
@@ -424,7 +424,7 @@ YAML::Node Parser2::mergeYAML(const YAML::Node& default_node,
     {
         if ( !node.first.IsScalar() || !new_node[node.first.Scalar()] )
         {
-            new_node[node.first] = node.second;
+            new_node[node.first.Scalar()] = node.second;
         }
     }
     return YAML::Node(new_node);
