@@ -17,6 +17,7 @@ catkin_package(
         include
     LIBRARIES
         yaml_common
+        yaml-cpp
 )
 
 # The documentation build option set to OFF by default
