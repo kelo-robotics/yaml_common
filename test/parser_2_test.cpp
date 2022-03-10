@@ -508,6 +508,35 @@ TEST(Parser2Test, geometry_common_datatypes)
 
 }
 
+TEST(Parser2Test, mergeYAML)
+{
+    YAML::Node original_node;
+    original_node["a"] = 5;
+    original_node["b"] = 6;
+
+    YAML::Node override_node;
+    override_node["b"] = 7;
+    override_node["c"] = 8;
+
+    YAML::Node node = Parser::mergeYAML(original_node, override_node);
+
+    // verify that original node is not changed
+    EXPECT_EQ(Parser::get<int>(original_node, "a", 0), 5);
+    EXPECT_EQ(Parser::get<int>(original_node, "b", 0), 6);
+    EXPECT_EQ(Parser::has<int>(original_node, "c"), false);
+
+    // verify that override node is not changed
+    EXPECT_EQ(Parser::get<int>(override_node, "b", 0), 7);
+    EXPECT_EQ(Parser::get<int>(override_node, "c", 0), 8);
+    EXPECT_EQ(Parser::has<int>(override_node, "a"), false);
+
+    // verify that newly merged node is correct
+    EXPECT_EQ(Parser::get<int>(node, "a", 0), 5);
+    EXPECT_EQ(Parser::get<int>(node, "b", 0), 7);
+    EXPECT_EQ(Parser::get<int>(node, "c", 0), 8);
+
+}
+
 int main(int argc, char **argv)
 {
     testing::InitGoogleTest(&argc, argv);
