@@ -43,6 +43,7 @@
 
 #include <yaml-cpp/yaml.h>
 
+#include <geometry_common/Box.h>
 #include <geometry_common/Point2D.h>
 #include <geometry_common/Point3D.h>
 #include <geometry_common/XYTheta.h>
@@ -102,6 +103,11 @@ class Parser2
         static bool read(
                 const YAML::Node& node,
                 geometry_common::TransformMatrix3D& value,
+                bool print_error_msg = true);
+
+        static bool read(
+                const YAML::Node& node,
+                geometry_common::Box& value,
                 bool print_error_msg = true);
 
         template <typename T>

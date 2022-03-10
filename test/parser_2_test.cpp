@@ -4,6 +4,7 @@
 
 #include <yaml_common/Parser2.h>
 
+#include <geometry_common/Box.h>
 #include <geometry_common/Point2D.h>
 #include <geometry_common/Point3D.h>
 #include <geometry_common/XYTheta.h>
@@ -12,6 +13,7 @@
 #include <geometry_common/TransformMatrix3D.h>
 
 using Parser = kelo::yaml_common::Parser2;
+using kelo::geometry_common::Box;
 using kelo::geometry_common::Point2D;
 using kelo::geometry_common::Point3D;
 using kelo::geometry_common::XYTheta;
@@ -223,6 +225,15 @@ TEST(Parser2Test, geometry_common_datatypes)
     tfmat3d_quat_yaml["qz"] = 0.0f;
     tfmat3d_quat_yaml["qw"] = 1.0f;
 
+    YAML::Node box_yaml;
+    box_yaml["min_x"] = 5.0f;
+    box_yaml["min_y"] = 5.0f;
+    box_yaml["min_z"] = 5.0f;
+    box_yaml["max_x"] = 6.0f;
+    box_yaml["max_y"] = 6.0f;
+    box_yaml["max_z"] = 6.0f;
+    node["box"] = box_yaml;
+
     Point2D true_point_2d(5.0f, 6.0f);
     Point2D default_point_2d(2.0f, 3.0f);
     Point2D test_point_2d = default_point_2d;
@@ -368,6 +379,29 @@ TEST(Parser2Test, geometry_common_datatypes)
     EXPECT_EQ(Parser::get<TransformMatrix3D>(node["i"], default_tf_mat_3d), default_tf_mat_3d);
     EXPECT_EQ(Parser::get<TransformMatrix3D>(tfmat3d_quat_yaml, default_tf_mat_3d),
               TransformMatrix3D(5.0f, 6.0f, 7.0f, 0.0f, 0.0f, 0.0f));
+
+    Box true_box(5.0f, 6.0f, 5.0f, 6.0f, 5.0f, 6.0f);
+    Box default_box(2.0f, 3.0f, 2.0f, 3.0f, 2.0f, 3.0f);
+    Box test_box = default_box;
+    EXPECT_EQ(Parser::read<Box>(node, "box2", test_box), false); // read from map but with incorrect key
+    EXPECT_EQ(test_box, default_box); // check if value is not overwritten
+    EXPECT_EQ(Parser::read<Box>(node, "box", test_box), true); // read from map with correct key
+    EXPECT_EQ(test_box, true_box); // check if value is read correctly
+    test_box = default_box;
+    EXPECT_EQ(Parser::read(node["i"], test_box), false); // read value directly from node with another key with value int
+    EXPECT_EQ(test_box, default_box); // check if value is not overwritten
+    EXPECT_EQ(Parser::read(node["box2"], test_box), false); // read value from an invalid/empty node
+    EXPECT_EQ(test_box, default_box); // check if value is not overwritten
+    EXPECT_EQ(Parser::read(node["box"], test_box), true); // read value directly from node with correct key
+    EXPECT_EQ(test_box, true_box); // check if value is read correctly
+    EXPECT_EQ(Parser::has<Box>(node, "box"), true);
+    EXPECT_EQ(Parser::has<Box>(node, "box2"), false);
+    EXPECT_EQ(Parser::is<Box>(node["box"]), true);
+    EXPECT_EQ(Parser::is<Box>(node["i"]), false);
+    EXPECT_EQ(Parser::get<Box>(node, "box", default_box), true_box);
+    EXPECT_EQ(Parser::get<Box>(node, "box2", default_box), default_box);
+    EXPECT_EQ(Parser::get<Box>(node["box"], default_box), true_box);
+    EXPECT_EQ(Parser::get<Box>(node["i"], default_box), default_box);
 
 }
 

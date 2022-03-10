@@ -89,6 +89,9 @@ template bool Parser2::read(const YAML::Node& node, const std::string& key,
 template bool Parser2::read(const YAML::Node& node, const std::string& key,
                             geometry_common::TransformMatrix3D& value,
                             bool print_error_msg);
+template bool Parser2::read(const YAML::Node& node, const std::string& key,
+                            geometry_common::Box& value,
+                            bool print_error_msg);
 
 template <typename T>
 bool Parser2::read(const YAML::Node& node, T& value, bool print_error_msg)
@@ -239,6 +242,26 @@ bool Parser2::read(const YAML::Node& node, geometry_common::TransformMatrix3D& v
                   << " either euler or quaternion format." << std::endl;
     }
     return false;
+}
+
+bool Parser2::read(const YAML::Node& node, geometry_common::Box& value,
+                   bool print_error_msg)
+{
+    std::vector<std::string> keys{"min_x", "max_x", "min_y", "max_y",
+                                  "min_z", "max_z"};
+    std::vector<float> values;
+    if ( !Parser2::readFloats(node, keys, values, print_error_msg) )
+    {
+        return false;
+    }
+
+    value.min_x = values[0];
+    value.max_x = values[1];
+    value.min_y = values[2];
+    value.max_y = values[3];
+    value.min_z = values[4];
+    value.max_z = values[5];
+    return true;
 }
 
 bool Parser2::readFloats(
