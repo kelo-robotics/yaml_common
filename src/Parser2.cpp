@@ -94,6 +94,12 @@ template bool Parser2::read(const YAML::Node& node, const std::string& key,
 template bool Parser2::read(const YAML::Node& node, const std::string& key,
                             geometry_common::LineSegment2D& value,
                             bool print_error_msg);
+template bool Parser2::read(const YAML::Node& node, const std::string& key,
+                            geometry_common::Polyline2D& value,
+                            bool print_error_msg);
+template bool Parser2::read(const YAML::Node& node, const std::string& key,
+                            geometry_common::Polygon2D& value,
+                            bool print_error_msg);
 
 template <typename T>
 bool Parser2::read(const YAML::Node& node, T& value, bool print_error_msg)
@@ -278,6 +284,45 @@ bool Parser2::read(const YAML::Node& node, geometry_common::LineSegment2D& value
 
     value.start = start;
     value.end = end;
+    return true;
+}
+
+bool Parser2::read(const YAML::Node& node, geometry_common::Polyline2D& value,
+                   bool print_error_msg)
+{
+    if ( !node.IsSequence() )
+    {
+        if ( print_error_msg )
+        {
+            std::cout << "[Parser2] Given YAML::Node is not a sequence" << std::endl;
+        }
+        return false;
+    }
+
+    geometry_common::PointVec2D points;
+    for ( YAML::const_iterator it = node.begin(); it != node.end(); it++ )
+    {
+        geometry_common::Point2D pt;
+        if ( !Parser2::read(*it, pt, print_error_msg) )
+        {
+            return false;
+        }
+        points.push_back(pt);
+    }
+
+    value.vertices = points;
+    return true;
+}
+
+bool Parser2::read(const YAML::Node& node, geometry_common::Polygon2D& value,
+                   bool print_error_msg)
+{
+    geometry_common::Polyline2D polyline;
+    if ( !Parser2::read(node, polyline, print_error_msg) )
+    {
+        return false;
+    }
+    value.vertices = polyline.vertices;
     return true;
 }
 

@@ -12,6 +12,8 @@
 #include <geometry_common/TransformMatrix2D.h>
 #include <geometry_common/TransformMatrix3D.h>
 #include <geometry_common/LineSegment2D.h>
+#include <geometry_common/Polyline2D.h>
+#include <geometry_common/Polygon2D.h>
 
 using Parser = kelo::yaml_common::Parser2;
 using kelo::geometry_common::Box;
@@ -22,6 +24,8 @@ using kelo::geometry_common::Pose2D;
 using kelo::geometry_common::TransformMatrix2D;
 using kelo::geometry_common::TransformMatrix3D;
 using kelo::geometry_common::LineSegment2D;
+using kelo::geometry_common::Polyline2D;
+using kelo::geometry_common::Polygon2D;
 
 TEST(Parser2Test, generic_datatypes)
 {
@@ -244,6 +248,16 @@ TEST(Parser2Test, geometry_common_datatypes)
     line_segment_yaml["end"] = point2d_yaml;
     node["linesegment"] = line_segment_yaml;
 
+    YAML::Node polyline_yaml;
+    YAML::Node polyline_start_yaml;
+    polyline_start_yaml["x"] = 7.0f;
+    polyline_start_yaml["y"] = 0.0f;
+    polyline_yaml.push_back(polyline_start_yaml);
+    polyline_yaml.push_back(line_segment_start_yaml);
+    polyline_yaml.push_back(point2d_yaml);
+    node["polyline"] = polyline_yaml;
+    node["polygon"] = polyline_yaml;
+
     Point2D true_point_2d(5.0f, 6.0f);
     Point2D default_point_2d(2.0f, 3.0f);
     Point2D test_point_2d = default_point_2d;
@@ -435,6 +449,62 @@ TEST(Parser2Test, geometry_common_datatypes)
     EXPECT_EQ(Parser::get<LineSegment2D>(node, "linesegment2", default_line_segment), default_line_segment);
     EXPECT_EQ(Parser::get<LineSegment2D>(node["linesegment"], default_line_segment), true_line_segment);
     EXPECT_EQ(Parser::get<LineSegment2D>(node["i"], default_line_segment), default_line_segment);
+
+    Polyline2D true_polyline({Point2D(7.0f, 0.0f),
+                              Point2D(2.0f, 3.0f),
+                              Point2D(5.0f, 6.0f)});
+    Polyline2D default_polyline({Point2D(0.0f, 0.0f),
+                                 Point2D(1.0f, 2.0f),
+                                 Point2D(2.0f, 1.0f),
+                                 Point2D(1.0f, 0.0f)});
+    Polyline2D test_polyline = default_polyline;
+    EXPECT_EQ(Parser::read<Polyline2D>(node, "polyline2", test_polyline), false); // read from map but with incorrect key
+    EXPECT_EQ(test_polyline, default_polyline); // check if value is not overwritten
+    EXPECT_EQ(Parser::read<Polyline2D>(node, "polyline", test_polyline), true); // read from map with correct key
+    EXPECT_EQ(test_polyline, true_polyline); // check if value is read correctly
+    test_polyline = default_polyline;
+    EXPECT_EQ(Parser::read(node["i"], test_polyline), false); // read value directly from node with another key with value int
+    EXPECT_EQ(test_polyline, default_polyline); // check if value is not overwritten
+    EXPECT_EQ(Parser::read(node["polyline2"], test_polyline), false); // read value from an invalid/empty node
+    EXPECT_EQ(test_polyline, default_polyline); // check if value is not overwritten
+    EXPECT_EQ(Parser::read(node["polyline"], test_polyline), true); // read value directly from node with correct key
+    EXPECT_EQ(test_polyline, true_polyline); // check if value is read correctly
+    EXPECT_EQ(Parser::has<Polyline2D>(node, "polyline"), true);
+    EXPECT_EQ(Parser::has<Polyline2D>(node, "polyline2"), false);
+    EXPECT_EQ(Parser::is<Polyline2D>(node["polyline"]), true);
+    EXPECT_EQ(Parser::is<Polyline2D>(node["i"]), false);
+    EXPECT_EQ(Parser::get<Polyline2D>(node, "polyline", default_polyline), true_polyline);
+    EXPECT_EQ(Parser::get<Polyline2D>(node, "polyline2", default_polyline), default_polyline);
+    EXPECT_EQ(Parser::get<Polyline2D>(node["polyline"], default_polyline), true_polyline);
+    EXPECT_EQ(Parser::get<Polyline2D>(node["i"], default_polyline), default_polyline);
+
+    Polygon2D true_polygon({Point2D(7.0f, 0.0f),
+                            Point2D(2.0f, 3.0f),
+                            Point2D(5.0f, 6.0f)});
+    Polygon2D default_polygon({Point2D(0.0f, 0.0f),
+                               Point2D(1.0f, 2.0f),
+                               Point2D(2.0f, 1.0f),
+                               Point2D(1.0f, 0.0f)});
+    Polygon2D test_polygon = default_polygon;
+    EXPECT_EQ(Parser::read<Polygon2D>(node, "polygon2", test_polygon), false); // read from map but with incorrect key
+    EXPECT_EQ(test_polygon, default_polygon); // check if value is not overwritten
+    EXPECT_EQ(Parser::read<Polygon2D>(node, "polygon", test_polygon), true); // read from map with correct key
+    EXPECT_EQ(test_polygon, true_polygon); // check if value is read correctly
+    test_polygon = default_polygon;
+    EXPECT_EQ(Parser::read(node["i"], test_polygon), false); // read value directly from node with another key with value int
+    EXPECT_EQ(test_polygon, default_polygon); // check if value is not overwritten
+    EXPECT_EQ(Parser::read(node["polygon2"], test_polygon), false); // read value from an invalid/empty node
+    EXPECT_EQ(test_polygon, default_polygon); // check if value is not overwritten
+    EXPECT_EQ(Parser::read(node["polygon"], test_polygon), true); // read value directly from node with correct key
+    EXPECT_EQ(test_polygon, true_polygon); // check if value is read correctly
+    EXPECT_EQ(Parser::has<Polygon2D>(node, "polygon"), true);
+    EXPECT_EQ(Parser::has<Polygon2D>(node, "polygon2"), false);
+    EXPECT_EQ(Parser::is<Polygon2D>(node["polygon"]), true);
+    EXPECT_EQ(Parser::is<Polygon2D>(node["i"]), false);
+    EXPECT_EQ(Parser::get<Polygon2D>(node, "polygon", default_polygon), true_polygon);
+    EXPECT_EQ(Parser::get<Polygon2D>(node, "polygon2", default_polygon), default_polygon);
+    EXPECT_EQ(Parser::get<Polygon2D>(node["polygon"], default_polygon), true_polygon);
+    EXPECT_EQ(Parser::get<Polygon2D>(node["i"], default_polygon), default_polygon);
 
 }
 

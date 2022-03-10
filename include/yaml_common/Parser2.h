@@ -51,6 +51,8 @@
 #include <geometry_common/TransformMatrix2D.h>
 #include <geometry_common/TransformMatrix3D.h>
 #include <geometry_common/LineSegment2D.h>
+#include <geometry_common/Polyline2D.h>
+#include <geometry_common/Polygon2D.h>
 
 namespace kelo::yaml_common
 {
@@ -114,6 +116,16 @@ class Parser2
         static bool read(
                 const YAML::Node& node,
                 geometry_common::LineSegment2D& value,
+                bool print_error_msg = true);
+
+        static bool read(
+                const YAML::Node& node,
+                geometry_common::Polyline2D& value,
+                bool print_error_msg = true);
+
+        static bool read(
+                const YAML::Node& node,
+                geometry_common::Polygon2D& value,
                 bool print_error_msg = true);
 
         template <typename T>
