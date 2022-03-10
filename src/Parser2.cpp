@@ -79,6 +79,10 @@ template bool Parser2::read(const YAML::Node& node, const std::string& key,
                             geometry_common::Point2D& value, bool print_error_msg);
 template bool Parser2::read(const YAML::Node& node, const std::string& key,
                             geometry_common::Point3D& value, bool print_error_msg);
+template bool Parser2::read(const YAML::Node& node, const std::string& key,
+                            geometry_common::XYTheta& value, bool print_error_msg);
+template bool Parser2::read(const YAML::Node& node, const std::string& key,
+                            geometry_common::Pose2D& value, bool print_error_msg);
 
 template <typename T>
 bool Parser2::read(const YAML::Node& node, T& value, bool print_error_msg)
@@ -142,6 +146,34 @@ bool Parser2::read(const YAML::Node& node, geometry_common::Point3D& value,
     value.x = values[0];
     value.y = values[1];
     value.z = values[2];
+    return true;
+}
+
+bool Parser2::read(const YAML::Node& node, geometry_common::XYTheta& value,
+                   bool print_error_msg)
+{
+    std::vector<std::string> keys{"x", "y", "theta"};
+    std::vector<float> values;
+    if ( !Parser2::readFloats(node, keys, values, print_error_msg) )
+    {
+        return false;
+    }
+
+    value.x = values[0];
+    value.y = values[1];
+    value.theta = values[2];
+    return true;
+}
+
+bool Parser2::read(const YAML::Node& node, geometry_common::Pose2D& value,
+                   bool print_error_msg)
+{
+    geometry_common::XYTheta temp_value;
+    if ( !Parser2::read(node, temp_value, print_error_msg) )
+    {
+        return false;
+    }
+    value = geometry_common::Pose2D(temp_value); // does angle clipping
     return true;
 }
 

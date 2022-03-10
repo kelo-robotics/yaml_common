@@ -5,9 +5,15 @@
 #include <yaml_common/Parser2.h>
 
 #include <geometry_common/Point2D.h>
+#include <geometry_common/Point3D.h>
+#include <geometry_common/XYTheta.h>
+#include <geometry_common/Pose2D.h>
 
 using Parser = kelo::yaml_common::Parser2;
 using kelo::geometry_common::Point2D;
+using kelo::geometry_common::Point3D;
+using kelo::geometry_common::XYTheta;
+using kelo::geometry_common::Pose2D;
 
 TEST(Parser2Test, generic_datatypes)
 {
@@ -151,11 +157,36 @@ TEST(Parser2Test, geometry_common_datatypes)
     point2d_yaml["x"] = 5.0f;
     point2d_yaml["y"] = 6.0f;
     node["point2d"] = point2d_yaml;
+
     YAML::Node incomplete_point2d_yaml;
     incomplete_point2d_yaml["x"] = 5.0f;
     YAML::Node wrong_point2d_yaml;
     wrong_point2d_yaml["x"] = 5.0f;
     wrong_point2d_yaml["y"] = "abc";
+
+    YAML::Node point3d_yaml;
+    point3d_yaml["x"] = 5.0f;
+    point3d_yaml["y"] = 6.0f;
+    point3d_yaml["z"] = 7.0f;
+    node["point3d"] = point3d_yaml;
+
+    YAML::Node xytheta_yaml;
+    xytheta_yaml["x"] = 5.0f;
+    xytheta_yaml["y"] = 6.0f;
+    xytheta_yaml["theta"] = 7.0f;
+    node["xytheta"] = xytheta_yaml;
+
+    YAML::Node pose2d_yaml;
+    pose2d_yaml["x"] = 5.0f;
+    pose2d_yaml["y"] = 6.0f;
+    pose2d_yaml["theta"] = 3.0f;
+    node["pose2d"] = pose2d_yaml;
+
+    YAML::Node pose2d_large_theta_yaml;
+    pose2d_large_theta_yaml["x"] = 5.0f;
+    pose2d_large_theta_yaml["y"] = 6.0f;
+    pose2d_large_theta_yaml["theta"] = 30.0f;
+
 
     Point2D true_point_2d(5.0f, 6.0f);
     Point2D default_point_2d(2.0f, 3.0f);
@@ -183,6 +214,76 @@ TEST(Parser2Test, geometry_common_datatypes)
     EXPECT_EQ(Parser::get<Point2D>(node, "point2d2", default_point_2d), default_point_2d);
     EXPECT_EQ(Parser::get<Point2D>(node["point2d"], default_point_2d), true_point_2d);
     EXPECT_EQ(Parser::get<Point2D>(node["i"], default_point_2d), default_point_2d);
+
+    Point3D true_point_3d(5.0f, 6.0f, 7.0f);
+    Point3D default_point_3d(2.0f, 3.0f, 4.0f);
+    Point3D test_point_3d = default_point_3d;
+    EXPECT_EQ(Parser::read<Point3D>(node, "point3d2", test_point_3d), false); // read from map but with incorrect key
+    EXPECT_EQ(test_point_3d, default_point_3d); // check if value is not overwritten
+    EXPECT_EQ(Parser::read<Point3D>(node, "point3d", test_point_3d), true); // read from map with correct key
+    EXPECT_EQ(test_point_3d, true_point_3d); // check if value is read correctly
+    test_point_3d = default_point_3d;
+    EXPECT_EQ(Parser::read(node["i"], test_point_3d), false); // read value directly from node with another key with value int
+    EXPECT_EQ(test_point_3d, default_point_3d); // check if value is not overwritten
+    EXPECT_EQ(Parser::read(node["point3d2"], test_point_3d), false); // read value from an invalid/empty node
+    EXPECT_EQ(test_point_3d, default_point_3d); // check if value is not overwritten
+    EXPECT_EQ(Parser::read(node["point3d"], test_point_3d), true); // read value directly from node with correct key
+    EXPECT_EQ(test_point_3d, true_point_3d); // check if value is read correctly
+    EXPECT_EQ(Parser::has<Point3D>(node, "point3d"), true);
+    EXPECT_EQ(Parser::has<Point3D>(node, "point3d2"), false);
+    EXPECT_EQ(Parser::is<Point3D>(node["point3d"]), true);
+    EXPECT_EQ(Parser::is<Point3D>(node["i"]), false);
+    EXPECT_EQ(Parser::get<Point3D>(node, "point3d", default_point_3d), true_point_3d);
+    EXPECT_EQ(Parser::get<Point3D>(node, "point3d2", default_point_3d), default_point_3d);
+    EXPECT_EQ(Parser::get<Point3D>(node["point3d"], default_point_3d), true_point_3d);
+    EXPECT_EQ(Parser::get<Point3D>(node["i"], default_point_3d), default_point_3d);
+
+    XYTheta true_xytheta(5.0f, 6.0f, 7.0f);
+    XYTheta default_xytheta(2.0f, 3.0f, 4.0f);
+    XYTheta test_xytheta = default_xytheta;
+    EXPECT_EQ(Parser::read<XYTheta>(node, "xytheta2", test_xytheta), false); // read from map but with incorrect key
+    EXPECT_EQ(test_xytheta, default_xytheta); // check if value is not overwritten
+    EXPECT_EQ(Parser::read<XYTheta>(node, "xytheta", test_xytheta), true); // read from map with correct key
+    EXPECT_EQ(test_xytheta, true_xytheta); // check if value is read correctly
+    test_xytheta = default_xytheta;
+    EXPECT_EQ(Parser::read(node["i"], test_xytheta), false); // read value directly from node with another key with value int
+    EXPECT_EQ(test_xytheta, default_xytheta); // check if value is not overwritten
+    EXPECT_EQ(Parser::read(node["xytheta2"], test_xytheta), false); // read value from an invalid/empty node
+    EXPECT_EQ(test_xytheta, default_xytheta); // check if value is not overwritten
+    EXPECT_EQ(Parser::read(node["xytheta"], test_xytheta), true); // read value directly from node with correct key
+    EXPECT_EQ(test_xytheta, true_xytheta); // check if value is read correctly
+    EXPECT_EQ(Parser::has<XYTheta>(node, "xytheta"), true);
+    EXPECT_EQ(Parser::has<XYTheta>(node, "xytheta2"), false);
+    EXPECT_EQ(Parser::is<XYTheta>(node["xytheta"]), true);
+    EXPECT_EQ(Parser::is<XYTheta>(node["i"]), false);
+    EXPECT_EQ(Parser::get<XYTheta>(node, "xytheta", default_xytheta), true_xytheta);
+    EXPECT_EQ(Parser::get<XYTheta>(node, "xytheta2", default_xytheta), default_xytheta);
+    EXPECT_EQ(Parser::get<XYTheta>(node["xytheta"], default_xytheta), true_xytheta);
+    EXPECT_EQ(Parser::get<XYTheta>(node["i"], default_xytheta), default_xytheta);
+
+    Pose2D true_pose_2d(5.0f, 6.0f, 3.0f);
+    Pose2D default_pose_2d(2.0f, 3.0f, 1.0f);
+    Pose2D test_pose_2d = default_pose_2d;
+    EXPECT_EQ(Parser::read<Pose2D>(node, "pose2d2", test_pose_2d), false); // read from map but with incorrect key
+    EXPECT_EQ(test_pose_2d, default_pose_2d); // check if value is not overwritten
+    EXPECT_EQ(Parser::read<Pose2D>(node, "pose2d", test_pose_2d), true); // read from map with correct key
+    EXPECT_EQ(test_pose_2d, true_pose_2d); // check if value is read correctly
+    test_pose_2d = default_pose_2d;
+    EXPECT_EQ(Parser::read(node["i"], test_pose_2d), false); // read value directly from node with another key with value int
+    EXPECT_EQ(test_pose_2d, default_pose_2d); // check if value is not overwritten
+    EXPECT_EQ(Parser::read(node["pose2d2"], test_pose_2d), false); // read value from an invalid/empty node
+    EXPECT_EQ(test_pose_2d, default_pose_2d); // check if value is not overwritten
+    EXPECT_EQ(Parser::read(node["pose2d"], test_pose_2d), true); // read value directly from node with correct key
+    EXPECT_EQ(test_pose_2d, true_pose_2d); // check if value is read correctly
+    EXPECT_EQ(Parser::has<Pose2D>(node, "pose2d"), true);
+    EXPECT_EQ(Parser::has<Pose2D>(node, "pose2d2"), false);
+    EXPECT_EQ(Parser::is<Pose2D>(node["pose2d"]), true);
+    EXPECT_EQ(Parser::is<Pose2D>(node["i"]), false);
+    EXPECT_EQ(Parser::get<Pose2D>(node, "pose2d", default_pose_2d), true_pose_2d);
+    EXPECT_EQ(Parser::get<Pose2D>(node, "pose2d2", default_pose_2d), default_pose_2d);
+    EXPECT_EQ(Parser::get<Pose2D>(node["pose2d"], default_pose_2d), true_pose_2d);
+    EXPECT_EQ(Parser::get<Pose2D>(node["i"], default_pose_2d), default_pose_2d);
+    EXPECT_EQ(Parser::get<Pose2D>(pose2d_large_theta_yaml, default_pose_2d), Pose2D(5.0f, 6.0f, 0.0f));
 
 }
 
