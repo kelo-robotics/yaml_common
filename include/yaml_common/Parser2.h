@@ -167,15 +167,9 @@ class Parser2
                 const std::string& key,
                 bool print_error_msg = true);
 
-        /**
-         * function aliases for backward compatibility
-         */
-        // constexpr auto static getInt = Parser2::get<int>;
-        // constexpr auto static getFloat = Parser2::get<float>;
-        // constexpr auto static getDouble = Parser2::get<double>;
-        // constexpr auto static getUnsignedLong = Parser2::get<size_t>;
-        // constexpr auto static getUnsignedInt = Parser2::get<unsigned int>;
-        // constexpr auto static getBool = Parser2::get<bool>;
+        static YAML::Node mergeYAML(
+                const YAML::Node& default_node,
+                const YAML::Node& override_node);
 
 };
 

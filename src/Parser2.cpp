@@ -375,4 +375,57 @@ bool Parser2::performSanityChecks(const YAML::Node& node, const std::string& key
     return true;
 }
 
+
+YAML::Node Parser2::mergeYAML(const YAML::Node& default_node,
+                              const YAML::Node& override_node)
+{
+    /**
+     * source: https://stackoverflow.com/a/41337824/10460994
+     */
+    if ( !override_node.IsMap() )
+    {
+        // If override_node is not a map, merge result is override_node, unless override_node is null
+        return override_node.IsNull() ? default_node : override_node;
+    }
+
+    if ( !default_node.IsMap() )
+    {
+        // If default_node is not a map, merge result is override_node
+        return override_node;
+    }
+
+    if ( !default_node.size() )
+    {
+        return YAML::Node(override_node);
+    }
+
+    /* Create a new map 'new_node' with the same mappings as default_node,
+     * merged with override_node */
+    auto new_node = YAML::Node(YAML::NodeType::Map);
+    for ( auto node : default_node )
+    {
+        if ( node.first.IsScalar() )
+        {
+            const std::string& key = node.first.Scalar();
+            if ( override_node[key] )
+            {
+                new_node[node.first] = Parser2::mergeYAML(
+                        node.second, override_node[key]);
+                continue;
+            }
+        }
+        new_node[node.first] = node.second;
+    }
+
+    /* Add the mappings from 'override_node' not already in 'new_node' */
+    for ( auto node : override_node )
+    {
+        if ( !node.first.IsScalar() || !new_node[node.first.Scalar()] )
+        {
+            new_node[node.first] = node.second;
+        }
+    }
+    return YAML::Node(new_node);
+}
+
 } // namespace kelo::yaml_common
