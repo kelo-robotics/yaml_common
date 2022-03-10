@@ -44,7 +44,9 @@
 #include <geometry_common/Pose2D.h>
 #include <yaml-cpp/yaml.h>
 
-namespace kelo::yaml_common
+namespace kelo
+{
+namespace yaml_common
 {
 
 /**
@@ -296,6 +298,6 @@ class Parser
     static void copyYaml(const YAML::Node& values, YAML::Node& target);
 };
 
-} // namespace kelo::yaml_common
-
+} // namespace yaml_common
+} // namespace kelo
 #endif // KELO_YAML_COMMON_PARSER_H
