@@ -98,17 +98,17 @@ class Parser2
         static T get(const YAML::Node& node, const std::string& key, T default_value)
         {
             T value;
-            return ( Parser2::read(node, key, value, false) ) ? value : default_value;
+            return Parser2::read(node, key, value, false) ? value : default_value;
         }
 
         template <typename T>
         static T get(const YAML::Node& node, T default_value)
         {
             T value;
-            return ( Parser2::read(node, value, false) ) ? value : default_value;
+            return Parser2::read(node, value, false) ? value : default_value;
         }
 
-        static bool readKeysAsFloats(
+        static bool readFloats(
                 const YAML::Node& node,
                 const std::vector<std::string>& keys,
                 std::vector<float>& values,

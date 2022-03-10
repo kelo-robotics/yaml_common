@@ -119,7 +119,7 @@ bool Parser2::read(const YAML::Node& node, geometry_common::Point2D& value,
 {
     std::vector<std::string> keys{"x", "y"};
     std::vector<float> values;
-    if ( !Parser2::readKeysAsFloats(node, keys, values, print_error_msg) )
+    if ( !Parser2::readFloats(node, keys, values, print_error_msg) )
     {
         return false;
     }
@@ -134,7 +134,7 @@ bool Parser2::read(const YAML::Node& node, geometry_common::Point3D& value,
 {
     std::vector<std::string> keys{"x", "y", "z"};
     std::vector<float> values;
-    if ( !Parser2::readKeysAsFloats(node, keys, values, print_error_msg) )
+    if ( !Parser2::readFloats(node, keys, values, print_error_msg) )
     {
         return false;
     }
@@ -145,44 +145,18 @@ bool Parser2::read(const YAML::Node& node, geometry_common::Point3D& value,
     return true;
 }
 
-bool Parser2::readKeysAsFloats(
+bool Parser2::readFloats(
         const YAML::Node& node, const std::vector<std::string>& keys,
         std::vector<float>& values, bool print_error_msg)
 {
-    if ( !node.IsMap() )
-    {
-        if ( print_error_msg )
-        {
-            std::cout << "[Parser2] Given YAML::Node is not a map" << std::endl;
-        }
-        return false;
-    }
-
     values.resize(keys.size());
     for ( size_t i = 0; i < keys.size(); i++ )
     {
-        // check if key exists
-        if ( !node[keys[i]] )
+        if ( !Parser2::read<float>(node, keys[i], values[i], print_error_msg) )
         {
-            if ( print_error_msg )
-            {
-                std::cout << "[Parser2] Given YAML::Node does not have key "
-                          << keys[i] << std::endl;
-            }
-            return false;
-        }
-
-        if ( !Parser2::read<float>(node[keys[i]], values[i], print_error_msg) )
-        {
-            if ( print_error_msg )
-            {
-                std::cout << "[Parser2] Could not read value of key"
-                          << keys[i] << std::endl;
-            }
             return false;
         }
     }
-
     return true;
 }
 
