@@ -27,7 +27,7 @@ TEST(Parser2Test, generic_datatypes)
     test_int = 2;
     EXPECT_EQ(Parser::read<int>(node["s"], test_int), false); // read value directly from node with another key with value string
     EXPECT_EQ(test_int, 2); // check if value is not overwritten
-    EXPECT_EQ(Parser::read<int>(node["i2"], test_int), false); // read value directly from node with incorrect key
+    EXPECT_EQ(Parser::read<int>(node["i2"], test_int), false); // read value from an invalid/empty node
     EXPECT_EQ(test_int, 2); // check if value is not overwritten
     EXPECT_EQ(Parser::read<int>(node["i"], test_int), true); // read value directly from node with correct key
     EXPECT_EQ(test_int, 5); // check if value is read correctly
@@ -48,7 +48,7 @@ TEST(Parser2Test, generic_datatypes)
     test_float = 2.0f;
     EXPECT_EQ(Parser::read<float>(node["s"], test_float), false); // read value directly from node with another key with value string
     EXPECT_NEAR(test_float, 2.0f, 1e-9f); // check if value is not overwritten
-    EXPECT_EQ(Parser::read<float>(node["f2"], test_float), false); // read value directly from node with incorrect key
+    EXPECT_EQ(Parser::read<float>(node["f2"], test_float), false); // read value from an invalid/empty node
     EXPECT_NEAR(test_float, 2.0f, 1e-9f); // check if value is not overwritten
     EXPECT_EQ(Parser::read<float>(node["f"], test_float), true); // read value directly from node with correct key
     EXPECT_NEAR(test_float, 5.5f, 1e-9f); // check if value is read correctly
@@ -69,7 +69,7 @@ TEST(Parser2Test, generic_datatypes)
     test_double = 2.0;
     EXPECT_EQ(Parser::read<double>(node["s"], test_double), false); // read value directly from node with another key with value string
     EXPECT_NEAR(test_double, 2.0, 1e-9); // check if value is not overwritten
-    EXPECT_EQ(Parser::read<double>(node["d2"], test_double), false); // read value directly from node with incorrect key
+    EXPECT_EQ(Parser::read<double>(node["d2"], test_double), false); // read value from an invalid/empty node
     EXPECT_NEAR(test_double, 2.0, 1e-9); // check if value is not overwritten
     EXPECT_EQ(Parser::read<double>(node["d"], test_double), true); // read value directly from node with correct key
     EXPECT_NEAR(test_double, 5.5, 1e-9); // check if value is read correctly
@@ -90,7 +90,7 @@ TEST(Parser2Test, generic_datatypes)
     test_unsigned_int = 2;
     EXPECT_EQ(Parser::read<unsigned int>(node["s"], test_unsigned_int), false); // read value directly from node with another key with value string
     EXPECT_EQ(test_unsigned_int, 2u); // check if value is not overwritten
-    EXPECT_EQ(Parser::read<unsigned int>(node["u2"], test_unsigned_int), false); // read value directly from node with incorrect key
+    EXPECT_EQ(Parser::read<unsigned int>(node["u2"], test_unsigned_int), false); // read value from an invalid/empty node
     EXPECT_EQ(test_unsigned_int, 2u); // check if value is not overwritten
     EXPECT_EQ(Parser::read<unsigned int>(node["u"], test_unsigned_int), true); // read value directly from node with correct key
     EXPECT_EQ(test_unsigned_int, 5u); // check if value is read correctly
@@ -111,7 +111,7 @@ TEST(Parser2Test, generic_datatypes)
     test_bool = false;
     EXPECT_EQ(Parser::read<bool>(node["s"], test_bool), false); // read value directly from node with another key with value string
     EXPECT_EQ(test_bool, false); // check if value is not overwritten
-    EXPECT_EQ(Parser::read<bool>(node["b2"], test_bool), false); // read value directly from node with incorrect key
+    EXPECT_EQ(Parser::read<bool>(node["b2"], test_bool), false); // read value from an invalid/empty node
     EXPECT_EQ(test_bool, false); // check if value is not overwritten
     EXPECT_EQ(Parser::read<bool>(node["b"], test_bool), true); // read value directly from node with correct key
     EXPECT_EQ(test_bool, true); // check if value is read correctly
@@ -130,7 +130,7 @@ TEST(Parser2Test, generic_datatypes)
     EXPECT_EQ(Parser::read<std::string>(node, "s", test_string), true); // read from map with correct key
     EXPECT_EQ(test_string, "abc"); // check if value is read correctly
     test_string = "xyz";
-    EXPECT_EQ(Parser::read<std::string>(node["s2"], test_string), false); // read value directly from node with incorrect key
+    EXPECT_EQ(Parser::read<std::string>(node["s2"], test_string), false); // read value from an invalid/empty node
     EXPECT_EQ(test_string, "xyz"); // check if value is not overwritten
     EXPECT_EQ(Parser::read<std::string>(node["s"], test_string), true); // read value directly from node with correct key
     EXPECT_EQ(test_string, "abc"); // check if value is read correctly
@@ -167,7 +167,7 @@ TEST(Parser2Test, geometry_common_datatypes)
     test_point_2d = default_point_2d;
     EXPECT_EQ(Parser::read(node["i"], test_point_2d), false); // read value directly from node with another key with value int
     EXPECT_EQ(test_point_2d, default_point_2d); // check if value is not overwritten
-    EXPECT_EQ(Parser::read(node["point2d2"], test_point_2d), false); // read value directly from node with incorrect key
+    EXPECT_EQ(Parser::read(node["point2d2"], test_point_2d), false); // read value from an invalid/empty node
     EXPECT_EQ(test_point_2d, default_point_2d); // check if value is not overwritten
     EXPECT_EQ(Parser::read(incomplete_point2d_yaml, test_point_2d), false); // read value directly from node with missing keys
     EXPECT_EQ(test_point_2d, default_point_2d); // check if value is not overwritten
