@@ -40,7 +40,9 @@
 
 #include "yaml_common/Parser.h"
 
-namespace kelo::yaml_common
+namespace kelo
+{
+namespace yaml_common
 {
 
 bool Parser::hasMap(const YAML::Node& node, std::string key)
@@ -365,4 +367,5 @@ void Parser::copyYaml(const YAML::Node& values, YAML::Node& target)
     }
 }
 
-} // namespace kelo::yaml_common
+} // namespace yaml_common
+} // namespace kelo
