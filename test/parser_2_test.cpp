@@ -11,6 +11,7 @@
 #include <geometry_common/Pose2D.h>
 #include <geometry_common/TransformMatrix2D.h>
 #include <geometry_common/TransformMatrix3D.h>
+#include <geometry_common/LineSegment2D.h>
 
 using Parser = kelo::yaml_common::Parser2;
 using kelo::geometry_common::Box;
@@ -20,6 +21,7 @@ using kelo::geometry_common::XYTheta;
 using kelo::geometry_common::Pose2D;
 using kelo::geometry_common::TransformMatrix2D;
 using kelo::geometry_common::TransformMatrix3D;
+using kelo::geometry_common::LineSegment2D;
 
 TEST(Parser2Test, generic_datatypes)
 {
@@ -234,6 +236,14 @@ TEST(Parser2Test, geometry_common_datatypes)
     box_yaml["max_z"] = 6.0f;
     node["box"] = box_yaml;
 
+    YAML::Node line_segment_yaml;
+    YAML::Node line_segment_start_yaml;
+    line_segment_start_yaml["x"] = 2.0f;
+    line_segment_start_yaml["y"] = 3.0f;
+    line_segment_yaml["start"] = line_segment_start_yaml;
+    line_segment_yaml["end"] = point2d_yaml;
+    node["linesegment"] = line_segment_yaml;
+
     Point2D true_point_2d(5.0f, 6.0f);
     Point2D default_point_2d(2.0f, 3.0f);
     Point2D test_point_2d = default_point_2d;
@@ -402,6 +412,29 @@ TEST(Parser2Test, geometry_common_datatypes)
     EXPECT_EQ(Parser::get<Box>(node, "box2", default_box), default_box);
     EXPECT_EQ(Parser::get<Box>(node["box"], default_box), true_box);
     EXPECT_EQ(Parser::get<Box>(node["i"], default_box), default_box);
+
+    LineSegment2D true_line_segment(2.0f, 3.0f, 5.0f, 6.0f);
+    LineSegment2D default_line_segment(0.0f, 0.0f, 1.0f, 1.0f);
+    LineSegment2D test_line_segment = default_line_segment;
+    EXPECT_EQ(Parser::read<LineSegment2D>(node, "linesegment2", test_line_segment), false); // read from map but with incorrect key
+    EXPECT_EQ(test_line_segment, default_line_segment); // check if value is not overwritten
+    EXPECT_EQ(Parser::read<LineSegment2D>(node, "linesegment", test_line_segment), true); // read from map with correct key
+    EXPECT_EQ(test_line_segment, true_line_segment); // check if value is read correctly
+    test_line_segment = default_line_segment;
+    EXPECT_EQ(Parser::read(node["i"], test_line_segment), false); // read value directly from node with another key with value int
+    EXPECT_EQ(test_line_segment, default_line_segment); // check if value is not overwritten
+    EXPECT_EQ(Parser::read(node["linesegment2"], test_line_segment), false); // read value from an invalid/empty node
+    EXPECT_EQ(test_line_segment, default_line_segment); // check if value is not overwritten
+    EXPECT_EQ(Parser::read(node["linesegment"], test_line_segment), true); // read value directly from node with correct key
+    EXPECT_EQ(test_line_segment, true_line_segment); // check if value is read correctly
+    EXPECT_EQ(Parser::has<LineSegment2D>(node, "linesegment"), true);
+    EXPECT_EQ(Parser::has<LineSegment2D>(node, "linesegment2"), false);
+    EXPECT_EQ(Parser::is<LineSegment2D>(node["linesegment"]), true);
+    EXPECT_EQ(Parser::is<LineSegment2D>(node["i"]), false);
+    EXPECT_EQ(Parser::get<LineSegment2D>(node, "linesegment", default_line_segment), true_line_segment);
+    EXPECT_EQ(Parser::get<LineSegment2D>(node, "linesegment2", default_line_segment), default_line_segment);
+    EXPECT_EQ(Parser::get<LineSegment2D>(node["linesegment"], default_line_segment), true_line_segment);
+    EXPECT_EQ(Parser::get<LineSegment2D>(node["i"], default_line_segment), default_line_segment);
 
 }
 

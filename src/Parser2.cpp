@@ -90,7 +90,9 @@ template bool Parser2::read(const YAML::Node& node, const std::string& key,
                             geometry_common::TransformMatrix3D& value,
                             bool print_error_msg);
 template bool Parser2::read(const YAML::Node& node, const std::string& key,
-                            geometry_common::Box& value,
+                            geometry_common::Box& value, bool print_error_msg);
+template bool Parser2::read(const YAML::Node& node, const std::string& key,
+                            geometry_common::LineSegment2D& value,
                             bool print_error_msg);
 
 template <typename T>
@@ -261,6 +263,21 @@ bool Parser2::read(const YAML::Node& node, geometry_common::Box& value,
     value.max_y = values[3];
     value.min_z = values[4];
     value.max_z = values[5];
+    return true;
+}
+
+bool Parser2::read(const YAML::Node& node, geometry_common::LineSegment2D& value,
+                   bool print_error_msg)
+{
+    geometry_common::Point2D start, end;
+    if ( !Parser2::read<geometry_common::Point2D>(node, "start", start, print_error_msg) ||
+         !Parser2::read<geometry_common::Point2D>(node, "end", end, print_error_msg) )
+    {
+        return false;
+    }
+
+    value.start = start;
+    value.end = end;
     return true;
 }
 
