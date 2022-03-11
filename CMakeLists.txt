@@ -64,7 +64,6 @@ add_library(yaml_common
     src/Parser.cpp
     src/Parser2.cpp
 )
-
 target_link_libraries(yaml_common
     ${catkin_LIBRARIES}
     ${YAML_CPP_LIBRARIES}

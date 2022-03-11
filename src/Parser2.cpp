@@ -130,6 +130,9 @@ template bool Parser2::read(const YAML::Node& node, const std::string& key,
 template bool Parser2::read(const YAML::Node& node, const std::string& key,
                             geometry_common::Polygon2D& value,
                             bool print_error_msg);
+template bool Parser2::read(const YAML::Node& node, const std::string& key,
+                            kelo::PointCloudProjectorConfig& value,
+                            bool print_error_msg);
 
 template <typename T>
 bool Parser2::read(const YAML::Node& node, T& value, bool print_error_msg)
@@ -353,6 +356,32 @@ bool Parser2::read(const YAML::Node& node, geometry_common::Polygon2D& value,
         return false;
     }
     value.vertices = polyline.vertices;
+    return true;
+}
+
+bool Parser2::read(const YAML::Node& node, kelo::PointCloudProjectorConfig& value,
+                   bool print_error_msg)
+{
+    std::vector<std::string> keys{"angle_min", "angle_max",
+                                  "passthrough_min_z", "passthrough_max_z",
+                                  "radial_dist_min", "radial_dist_max",
+                                  "angle_increment"};
+    std::vector<float> values;
+    if ( !Parser2::readFloats(node, keys, values, print_error_msg) )
+    {
+        return false;
+    }
+
+    // transform matrix is optional
+    value.tf_mat = Parser2::get<kelo::geometry_common::TransformMatrix3D>(
+            node, "transform", value.tf_mat);
+    value.angle_min = values[0];
+    value.angle_max = values[1];
+    value.passthrough_min_z = values[2];
+    value.passthrough_max_z = values[3];
+    value.radial_dist_min = values[4];
+    value.radial_dist_max = values[5];
+    value.angle_increment = values[6];
     return true;
 }
 

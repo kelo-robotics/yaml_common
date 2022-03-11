@@ -53,6 +53,7 @@
 #include <geometry_common/LineSegment2D.h>
 #include <geometry_common/Polyline2D.h>
 #include <geometry_common/Polygon2D.h>
+#include <geometry_common/PointCloudProjector.h>
 
 namespace kelo
 {
@@ -406,6 +407,39 @@ class Parser2
         static bool read(
                 const YAML::Node& node,
                 geometry_common::Polygon2D& value,
+                bool print_error_msg = true);
+
+        /**
+         * @brief Read value of `node` as PointCloudProjectorConfig object
+         *
+         * example yaml node:
+         * \code{.yaml}
+         *     transform:
+         *         x: 0.4
+         *         y: 0.2
+         *         z: 1.6
+         *         roll: 0.3
+         *         pitch: 0.4
+         *         yaw: 0.5
+         *      angle_min: -1.1
+         *      angle_max: 1.1
+         *      passthrough_min_z: 0.1
+         *      passthrough_max_z: 0.25
+         *      radial_dist_min: 0.1
+         *      radial_dist_max: 3.0
+         *      angle_increment: 0.01
+         * \endcode
+         *
+         * @param node YAML node that needs to be parsed
+         * @param value PointCloudProjectorConfig variable to which the parsed
+         * values should be assigned
+         * @param print_error_msg decides whether to print error message when
+         * parsing is unsuccessful.
+         * @return bool success in reading the value
+         */
+        static bool read(
+                const YAML::Node& node,
+                kelo::PointCloudProjectorConfig& value,
                 bool print_error_msg = true);
 
         /**

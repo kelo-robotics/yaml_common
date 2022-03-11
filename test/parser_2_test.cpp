@@ -14,6 +14,7 @@
 #include <geometry_common/LineSegment2D.h>
 #include <geometry_common/Polyline2D.h>
 #include <geometry_common/Polygon2D.h>
+#include <geometry_common/PointCloudProjector.h>
 
 using Parser = kelo::yaml_common::Parser2;
 using kelo::geometry_common::Box;
@@ -26,6 +27,7 @@ using kelo::geometry_common::TransformMatrix3D;
 using kelo::geometry_common::LineSegment2D;
 using kelo::geometry_common::Polyline2D;
 using kelo::geometry_common::Polygon2D;
+using Config = kelo::PointCloudProjectorConfig;
 
 TEST(Parser2Test, generic_datatypes)
 {
@@ -505,7 +507,32 @@ TEST(Parser2Test, geometry_common_datatypes)
     EXPECT_EQ(Parser::get<Polygon2D>(node, "polygon2", default_polygon), default_polygon);
     EXPECT_EQ(Parser::get<Polygon2D>(node["polygon"], default_polygon), true_polygon);
     EXPECT_EQ(Parser::get<Polygon2D>(node["i"], default_polygon), default_polygon);
+}
 
+TEST(Parser2Test, pointCloudProjectorConfig)
+{
+    YAML::Node node = YAML::Load("{transform: {x: 0.4, y: 0.2, z: 1.6, roll: 0.3, pitch: 0.4, yaw: 0.5},\
+            angle_min: -1.1, angle_max: 1.1,\
+            passthrough_min_z: 0.1, passthrough_max_z: 0.25,\
+            radial_dist_min: 0.1, radial_dist_max: 3.0,\
+            angle_increment: 0.01}");
+
+    std::cout << node << std::endl;
+    Config config;
+    EXPECT_EQ(Parser::read(node, config), true);
+    EXPECT_NEAR(config.tf_mat.x(), 0.4f, 1e-3f);
+    EXPECT_NEAR(config.tf_mat.y(), 0.2f, 1e-3f);
+    EXPECT_NEAR(config.tf_mat.z(), 1.6f, 1e-3f);
+    EXPECT_NEAR(config.tf_mat.roll(), 0.3f, 1e-3f);
+    EXPECT_NEAR(config.tf_mat.pitch(), 0.4f, 1e-3f);
+    EXPECT_NEAR(config.tf_mat.yaw(), 0.5f, 1e-3f);
+    EXPECT_NEAR(config.angle_min, -1.1f, 1e-3f);
+    EXPECT_NEAR(config.angle_max, 1.1f, 1e-3f);
+    EXPECT_NEAR(config.passthrough_min_z, 0.1f, 1e-3f);
+    EXPECT_NEAR(config.passthrough_max_z, 0.25f, 1e-3f);
+    EXPECT_NEAR(config.radial_dist_min, 0.1f, 1e-3f);
+    EXPECT_NEAR(config.radial_dist_max, 3.0f, 1e-3f);
+    EXPECT_NEAR(config.angle_increment, 0.01f, 1e-3f);
 }
 
 TEST(Parser2Test, getAllKeys)
@@ -528,12 +555,23 @@ TEST(Parser2Test, getAllKeys)
 
     std::vector<std::string> parsed_root_node_keys;
     EXPECT_EQ(Parser::getAllKeys(root_node, parsed_root_node_keys), true);
-    EXPECT_EQ(parsed_root_node_keys, root_node_keys);
-    EXPECT_NE(shuffled_root_node_keys, root_node_keys);
+    for ( size_t i = 0; i < root_node_keys.size(); i++ )
+    {
+        EXPECT_NE(std::find(parsed_root_node_keys.begin(),
+                            parsed_root_node_keys.end(),
+                            root_node_keys[i]),
+                  parsed_root_node_keys.end());
+    }
 
     std::vector<std::string> parsed_transform_node_keys;
     EXPECT_EQ(Parser::getAllKeys(transform_node, parsed_transform_node_keys), true);
-    EXPECT_EQ(parsed_transform_node_keys, transform_node_keys);
+    for ( size_t i = 0; i < root_node_keys.size(); i++ )
+    {
+        EXPECT_NE(std::find(parsed_transform_node_keys.begin(),
+                            parsed_transform_node_keys.end(),
+                            transform_node_keys[i]),
+                  parsed_transform_node_keys.end());
+    }
 
     std::vector<std::string> test_keys;
     EXPECT_EQ(Parser::getAllKeys(root_node["map"], test_keys), false);
