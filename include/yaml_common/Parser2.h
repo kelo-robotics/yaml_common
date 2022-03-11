@@ -525,6 +525,21 @@ class Parser2
         }
 
         /**
+         * @brief Parse an ordered list of all the keys present in a YAML map
+         * 
+         * @param node YAML map node that needs to be parsed
+         * @param keys vector of strings where the keys will be read
+         * @param print_error_msg decides whether to print error message when
+         * parsing is unsuccessful.
+         * @return success Only true when the yaml node is a map and all the 
+         * keys where parsed successfully
+         */
+        static bool getAllKeys(
+            const YAML::Node& node,
+            std::vector<std::string>& keys,
+            bool print_error_msg = true);
+
+        /**
          * @brief Given a vector of keys, parse their values from a YAML map
          * node.
          *

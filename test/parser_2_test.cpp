@@ -508,6 +508,37 @@ TEST(Parser2Test, geometry_common_datatypes)
 
 }
 
+TEST(Parser2Test, getAllKeys)
+{
+    YAML::Node transform_node;
+    transform_node["x"] = 5.0f;
+    transform_node["y"] = 6.0f;
+    transform_node["z"] = 7.0f;
+    transform_node["roll"] = 1.0f;
+    transform_node["pitch"] = 2.0f;
+    transform_node["yaw"] = 3.0f;
+
+    YAML::Node root_node;
+    root_node["map"] = "brsu";
+    root_node["transform"] = transform_node;
+
+    std::vector<std::string> root_node_keys = {"map", "transform"};
+    std::vector<std::string> shuffled_root_node_keys = {"transform", "map"};
+    std::vector<std::string> transform_node_keys = {"x", "y", "z", "roll", "pitch", "yaw"};
+
+    std::vector<std::string> parsed_root_node_keys;
+    EXPECT_EQ(Parser::getAllKeys(root_node, parsed_root_node_keys), true);
+    EXPECT_EQ(parsed_root_node_keys, root_node_keys);
+    EXPECT_NE(shuffled_root_node_keys, root_node_keys);
+
+    std::vector<std::string> parsed_transform_node_keys;
+    EXPECT_EQ(Parser::getAllKeys(transform_node, parsed_transform_node_keys), true);
+    EXPECT_EQ(parsed_transform_node_keys, transform_node_keys);
+
+    std::vector<std::string> test_keys;
+    EXPECT_EQ(Parser::getAllKeys(root_node["map"], test_keys), false);
+}
+
 TEST(Parser2Test, mergeYAML)
 {
     YAML::Node original_node;

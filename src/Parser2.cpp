@@ -356,6 +356,39 @@ bool Parser2::read(const YAML::Node& node, geometry_common::Polygon2D& value,
     return true;
 }
 
+bool Parser2::getAllKeys(
+        const YAML::Node& node,
+        std::vector<std::string>& keys,
+        bool print_error_msg)
+{
+    if ( !node.IsMap() )
+    {
+        if ( print_error_msg )
+        {
+            std::cout << "[Parser2] Given YAML::Node is not a map" << std::endl;
+        }
+        return false;
+    }
+
+    for ( const auto& kv : node )
+    {
+        if ( kv.first.IsScalar() )
+        {
+            keys.push_back(kv.first.Scalar());
+        }
+        else
+        {
+            if ( print_error_msg )
+            {
+                std::cout << "[Parser2] Given YAML::Node map contains a non-scalar key"
+                          << std::endl;
+            }
+            return false;
+        }
+    }
+    return true;
+}
+
 bool Parser2::readFloats(
         const YAML::Node& node, const std::vector<std::string>& keys,
         std::vector<float>& values, bool print_error_msg)
