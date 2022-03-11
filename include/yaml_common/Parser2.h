@@ -70,6 +70,12 @@ class Parser2
         /**
          * @brief Read value of `node`[`key`] into `value` when possible
          *
+         * example:
+         * \code
+         *     bool success = Parser2::read<int>(node, "key", your_int_variable);
+         *     bool success = Parser2::read<Point2D>(node, "key", your_point_variable);
+         * \endcode
+         *
          * @tparam T type of value to be read
          * @param node YAML node map that needs to be parsed
          * @param key key to be checked in node
@@ -86,10 +92,17 @@ class Parser2
                 bool print_error_msg = true);
 
         /**
-         * @brief Read value of `node` into `value` when possible
+         * @brief Read value of `node` into `value` when possible. This is used
+         * for generic c++ datatypes (`int`, `float`, `double`, `unsigned int`,
+         * `bool`, `std::string`)
          *
-         * @tparam T type of value to be read. This is used for generic c++
-         * datatypes (int, float, double, unsigned int, bool, std::string)
+         * example:
+         * \code
+         *     bool success = Parser2::read<int>(node, your_int_variable);
+         * \endcode
+         *
+         * @tparam T type of value to be read.(`int`, `float`, `double`,
+         * `unsigned int`, `bool`, `std::string`)
          * @param node YAML node that needs to be parsed
          * @param value variable to which the parsed values should be assigned
          * @param print_error_msg decides whether to print error message when
@@ -104,6 +117,13 @@ class Parser2
 
         /**
          * @brief Read value of `node` as Point2D object
+         *
+         * example yaml node:
+         * \code{.yaml}
+         *     point_name:
+         *         x: 5.4
+         *         y: 7.6
+         * \endcode
          *
          * @param node YAML node that needs to be parsed
          * @param value Point2D variable to which the parsed values should be
@@ -120,6 +140,14 @@ class Parser2
         /**
          * @brief Read value of `node` as Point3D object
          *
+         * example yaml node:
+         * \code{.yaml}
+         *     point_name:
+         *         x: 5.4
+         *         y: 7.6
+         *         z: 9.8
+         * \endcode
+         *
          * @param node YAML node that needs to be parsed
          * @param value Point3D variable to which the parsed values should be
          * assigned
@@ -134,6 +162,14 @@ class Parser2
 
         /**
          * @brief Read value of `node` as XYTheta object
+         *
+         * example yaml node:
+         * \code{.yaml}
+         *     max_velocity:
+         *         x: 5.4
+         *         y: 7.6
+         *         theta: 9.8
+         * \endcode
          *
          * @param node YAML node that needs to be parsed
          * @param value XYTheta variable to which the parsed values should be
@@ -150,6 +186,14 @@ class Parser2
         /**
          * @brief Read value of `node` as Pose2D object
          *
+         * example yaml node:
+         * \code{.yaml}
+         *     checkpoint:
+         *         x: 5.4
+         *         y: 7.6
+         *         theta: 0.3
+         * \endcode
+         *
          * @param node YAML node that needs to be parsed
          * @param value Pose2D variable to which the parsed values should be
          * assigned
@@ -164,6 +208,23 @@ class Parser2
 
         /**
          * @brief Read value of `node` as TransformMatrix2D object
+         *
+         * example yaml node:
+         * \code{.yaml}
+         *     laser_to_base_link_tf:
+         *         x: 5.4
+         *         y: 7.6
+         *         theta: 0.3
+         * \endcode
+         * \code{.yaml}
+         *     lidar_to_base_link_tf:
+         *         x: 5.4
+         *         y: 7.6
+         *         qx: 0.0
+         *         qy: 0.0
+         *         qz: 0.0
+         *         qw: 1.0
+         * \endcode
          *
          * @param node YAML node that needs to be parsed
          * @param value TransformMatrix2D variable to which the parsed values
@@ -180,6 +241,27 @@ class Parser2
         /**
          * @brief Read value of `node` as TransformMatrix3D object
          *
+         * example yaml node:
+         * \code{.yaml}
+         *     camera_to_base_link_tf:
+         *         x: 0.4
+         *         y: 0.2
+         *         z: 1.6
+         *         roll: 0.3
+         *         pitch: 0.4
+         *         yaw: 0.5
+         * \endcode
+         * \code{.yaml}
+         *     camera_to_base_link_tf:
+         *         x: 0.4
+         *         y: 0.6
+         *         z: 1.6
+         *         qx: 0.0
+         *         qy: 0.0
+         *         qz: 0.0
+         *         qw: 1.0
+         * \endcode
+         *
          * @param node YAML node that needs to be parsed
          * @param value TransformMatrix3D variable to which the parsed values
          * should be assigned
@@ -194,6 +276,17 @@ class Parser2
 
         /**
          * @brief Read value of `node` as Box object
+         *
+         * example yaml node:
+         * \code{.yaml}
+         *     collision_box:
+         *         min_x: 0.1
+         *         max_x: 0.4
+         *         min_y: 0.2
+         *         max_y: 0.5
+         *         min_z: 0.3
+         *         max_z: 0.6
+         * \endcode
          *
          * @param node YAML node that needs to be parsed
          * @param value Box variable to which the parsed values should be
@@ -210,6 +303,17 @@ class Parser2
         /**
          * @brief Read value of `node` as LineSegment2D object
          *
+         * example yaml node:
+         * \code{.yaml}
+         *     line_segment_name:
+         *         start:
+         *             x: 10.0
+         *             y: 20.0
+         *         end:
+         *             x: 30.0
+         *             y: 40.0
+         * \endcode
+         *
          * @param node YAML node that needs to be parsed
          * @param value LineSegment2D variable to which the parsed values should
          * be assigned
@@ -225,6 +329,25 @@ class Parser2
         /**
          * @brief Read value of `node` as Polyline2D object
          *
+         * example yaml node:
+         * \code{.yaml}
+         *     polyline_connections:
+         *         - x: 10.0
+         *           y: 20.0
+         *         - x: 30.0
+         *           y: 40.0
+         *         - x: 50.0
+         *           y: 60.0
+         *         - ...
+         * \endcode
+         * \code{.yaml}
+         *     polyline_connections:
+         *         - {x: 10.0, y: 20.0}
+         *         - {x: 30.0, y: 40.0}
+         *         - {x: 50.0, y: 60.0}
+         *         - ...
+         * \endcode
+         *
          * @param node YAML node that needs to be parsed
          * @param value Polyline2D variable to which the parsed values should
          * be assigned
@@ -239,6 +362,25 @@ class Parser2
 
         /**
          * @brief Read value of `node` as Polygon2D object
+         *
+         * example yaml node:
+         * \code{.yaml}
+         *     polygon_connections:
+         *         - x: 10.0
+         *           y: 20.0
+         *         - x: 30.0
+         *           y: 40.0
+         *         - x: 50.0
+         *           y: 60.0
+         *         - ...
+         * \endcode
+         * \code{.yaml}
+         *     polygon_connections:
+         *         - {x: 10.0, y: 20.0}
+         *         - {x: 30.0, y: 40.0}
+         *         - {x: 50.0, y: 60.0}
+         *         - ...
+         * \endcode
          *
          * @param node YAML node that needs to be parsed
          * @param value Polygon2D variable to which the parsed values should be
@@ -256,6 +398,12 @@ class Parser2
          * @brief Check if `node` contains `key` as one of its key-value pairs
          * and the value of that key can be read as `T` datatype
          *
+         * example:
+         * \code
+         *     bool node_has_int = Parser2::has<int>(node, "key");
+         *     bool node_has_point = Parser2::has<Point2D>(node, "key");
+         * \endcode
+         *
          * @tparam T type of value to be read
          * @param node YAML node that needs to be checked
          * @param key key that needs to be checked in `node`
@@ -272,6 +420,12 @@ class Parser2
         /**
          * @brief Check if `node` can be read as `T` datatype
          *
+         * example:
+         * \code
+         *     bool is_node_int = Parser2::is<int>(node);
+         *     bool is_node_point = Parser2::is<Point2D>(node);
+         * \endcode
+         *
          * @tparam T type of value to be read
          * @param node YAML node that needs to be checked
          * @return true if `node` can be read as type `T`
@@ -286,6 +440,12 @@ class Parser2
         /**
          * @brief Parse and return `node`[`key`] as `T` datatype if possible,
          * otherwise return the `default_value`.
+         *
+         * example:
+         * \code
+         *     int your_int_variable = Parser2::get<int>(node, "key", default_int_value);
+         *     Point2D your_point_variable = Parser2::get<Point2D>(node, "key", default_point_value);
+         * \endcode
          *
          * @tparam T type of value to be read
          * @param node YAML node that needs to be parsed
@@ -305,6 +465,12 @@ class Parser2
         /**
          * @brief Parse and return `node` as `T` datatype if possible,
          * otherwise return the `default_value`.
+         *
+         * example:
+         * \code
+         *     int your_int_variable = Parser2::get<int>(node, default_int_value);
+         *     Point2D your_point_variable = Parser2::get<Point2D>(node, default_point_value);
+         * \endcode
          *
          * @tparam T type of value to be read
          * @param node YAML node that needs to be parsed
