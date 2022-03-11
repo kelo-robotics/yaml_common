@@ -15,9 +15,10 @@ catkin_package(
         geometry_common
     INCLUDE_DIRS
         include
+        ${YAML_CPP_INCLUDE_DIRS}
     LIBRARIES
         yaml_common
-        yaml-cpp
+        ${YAML_CPP_LIBRARIES}
 )
 
 # The documentation build option set to OFF by default
