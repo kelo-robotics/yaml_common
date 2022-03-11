@@ -68,6 +68,20 @@ class Parser2
     public:
 
         /**
+         * @brief Load a .yaml file from disk with error checking
+         *
+         * @param abs_file_path Absolute path of .yaml file
+         * @param node YAML node where the loaded file's content will be read to
+         * @param print_error_msg decides whether to print error message when
+         * loading is unsuccessful.
+         * @return bool success in loading the file
+         */
+        static bool loadFile(
+                const std::string& abs_file_path,
+                YAML::Node& node,
+                bool print_error_msg = true);
+
+        /**
          * @brief Read value of `node`[`key`] into `value` when possible
          *
          * example:

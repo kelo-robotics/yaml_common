@@ -46,6 +46,34 @@ namespace kelo
 namespace yaml_common
 {
 
+bool Parser2::loadFile(const std::string& abs_file_path,
+                       YAML::Node& node, bool print_error_msg)
+{
+    try
+    {
+        node = YAML::LoadFile(abs_file_path);
+    }
+    catch( YAML::BadFile )
+    {
+        if ( print_error_msg )
+        {
+            std::cout << "YAML threw BadFile exception. Does the file exist?"
+                      << std::endl << abs_file_path << std::endl;
+        }
+        return false;
+    }
+    catch( const YAML::ParserException& e )
+    {
+        if ( print_error_msg )
+        {
+            std::cout << "YAML parsing error" << std::endl
+                      << e.what() << std::endl;
+        }
+        return false;
+    }
+    return true;
+}
+
 template <typename T>
 bool Parser2::read(const YAML::Node& node, const std::string& key,
                    T& value, bool print_error_msg)
