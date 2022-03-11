@@ -411,7 +411,9 @@ class Parser2
          * as type `T`
          */
         template <typename T>
-        static bool has(const YAML::Node& node, const std::string& key)
+        static bool has(
+                const YAML::Node& node,
+                const std::string& key)
         {
             T dummy;
             return read(node, key, dummy, false);
@@ -431,7 +433,8 @@ class Parser2
          * @return true if `node` can be read as type `T`
          */
         template <typename T>
-        static bool is(const YAML::Node& node)
+        static bool is(
+                const YAML::Node& node)
         {
             T dummy;
             return read(node, dummy, false);
@@ -456,7 +459,10 @@ class Parser2
          * default_value
          */
         template <typename T>
-        static T get(const YAML::Node& node, const std::string& key, T default_value)
+        static T get(
+                const YAML::Node& node,
+                const std::string& key,
+                const T& default_value)
         {
             T value;
             return Parser2::read(node, key, value, false) ? value : default_value;
@@ -479,7 +485,9 @@ class Parser2
          * @return parsed value of node if possible, otherwise default_value
          */
         template <typename T>
-        static T get(const YAML::Node& node, T default_value)
+        static T get(
+                const YAML::Node& node,
+                const T& default_value)
         {
             T value;
             return Parser2::read(node, value, false) ? value : default_value;
