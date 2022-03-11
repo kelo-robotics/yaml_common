@@ -378,7 +378,7 @@ bool Parser2::performSanityChecks(const YAML::Node& node, const std::string& key
 }
 
 
-YAML::Node Parser2::mergeYAML(const YAML::Node& default_node,
+YAML::Node Parser2::mergeYAML(const YAML::Node& base_node,
                               const YAML::Node& override_node)
 {
     /**
@@ -387,24 +387,24 @@ YAML::Node Parser2::mergeYAML(const YAML::Node& default_node,
     if ( !override_node.IsMap() )
     {
         // If override_node is not a map, merge result is override_node, unless override_node is null
-        return override_node.IsNull() ? default_node : override_node;
+        return override_node.IsNull() ? base_node : override_node;
     }
 
-    if ( !default_node.IsMap() )
+    if ( !base_node.IsMap() )
     {
-        // If default_node is not a map, merge result is override_node
+        // If base_node is not a map, merge result is override_node
         return override_node;
     }
 
-    if ( !default_node.size() )
+    if ( !base_node.size() )
     {
         return YAML::Node(override_node);
     }
 
-    /* Create a new map 'new_node' with the same mappings as default_node,
+    /* Create a new map 'new_node' with the same mappings as base_node,
      * merged with override_node */
     auto new_node = YAML::Node(YAML::NodeType::Map);
-    for ( auto node : default_node )
+    for ( auto node : base_node )
     {
         if ( node.first.IsScalar() )
         {

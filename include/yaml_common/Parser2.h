@@ -533,13 +533,13 @@ class Parser2
          * from the input nodes are copied as is. For conflicting keys,
          * values from `override_node` are used.
          *
-         * @param default_node YAML map node used as base
+         * @param base_node YAML map node used as base
          * @param override_node YAML map node whose values will be used when a
          * key is present in both nodes
          * @return YAML map node that is a merged map of both input nodes
          */
         static YAML::Node mergeYAML(
-                const YAML::Node& default_node,
+                const YAML::Node& base_node,
                 const YAML::Node& override_node);
 
 };
