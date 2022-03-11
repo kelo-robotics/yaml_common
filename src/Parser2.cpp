@@ -374,6 +374,17 @@ bool Parser2::readFloats(
 bool Parser2::performSanityChecks(const YAML::Node& node, const std::string& key,
                                   bool print_error_msg)
 {
+    if ( !Parser2::hasKey(node, key, print_error_msg) )
+    {
+        return false;
+    }
+    // Add more sanity checks here if/when needed
+    return true;
+}
+
+bool Parser2::hasKey(const YAML::Node& node, const std::string& key,
+                     bool print_error_msg)
+{
     if ( key.empty() )
     {
         if ( print_error_msg )
@@ -404,7 +415,6 @@ bool Parser2::performSanityChecks(const YAML::Node& node, const std::string& key
 
     return true;
 }
-
 
 YAML::Node Parser2::mergeYAML(const YAML::Node& base_node,
                               const YAML::Node& override_node)

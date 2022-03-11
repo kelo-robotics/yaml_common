@@ -434,6 +434,23 @@ class Parser2
         }
 
         /**
+         * @brief Check if `node` contains `key` or not. Additionally it also
+         * checks for the following two things
+         * 1. `key` is not an empty string
+         * 2. `node` is of YAML map type
+         *
+         * @param node YAML map node
+         * @param key key to be checked
+         * @param print_error_msg decides whether to print error message when
+         * parsing is unsuccessful.
+         * @return true when node contains key
+         */
+        static bool hasKey(
+                const YAML::Node& node,
+                const std::string& key,
+                bool print_error_msg = true);
+
+        /**
          * @brief Check if `node` can be read as `T` datatype
          *
          * example:
