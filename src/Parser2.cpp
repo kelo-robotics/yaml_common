@@ -53,7 +53,7 @@ bool Parser2::loadFile(const std::string& abs_file_path,
     {
         node = YAML::LoadFile(abs_file_path);
     }
-    catch( YAML::BadFile )
+    catch( const YAML::BadFile& )
     {
         if ( print_error_msg )
         {
