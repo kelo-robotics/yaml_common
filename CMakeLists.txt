@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10.2)
+cmake_minimum_required(VERSION 3.5.1)
 project(yaml_common)
 
 add_compile_options(-std=c++11 -Wall -Wextra)
