@@ -312,7 +312,7 @@ bool convert<kelo::PointCloudProjectorConfig>::decode(
         const Node& node, kelo::PointCloudProjectorConfig& config)
 {
     kelo::yaml_common::Parser2::read<kelo::geometry_common::TransformMatrix3D>(
-            node, "transform", config.tf_mat); // optional
+            node, "transform", config.tf_mat, false); // optional
     return ( kelo::yaml_common::Parser2::read<float>(
                  node, "angle_min", config.angle_min) &&
              kelo::yaml_common::Parser2::read<float>(
