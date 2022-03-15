@@ -43,17 +43,7 @@
 
 #include <yaml-cpp/yaml.h>
 
-#include <geometry_common/Box.h>
-#include <geometry_common/Point2D.h>
-#include <geometry_common/Point3D.h>
-#include <geometry_common/XYTheta.h>
-#include <geometry_common/Pose2D.h>
-#include <geometry_common/TransformMatrix2D.h>
-#include <geometry_common/TransformMatrix3D.h>
-#include <geometry_common/LineSegment2D.h>
-#include <geometry_common/Polyline2D.h>
-#include <geometry_common/Polygon2D.h>
-#include <geometry_common/PointCloudProjector.h>
+#include <yaml_common/conversions/GeometryCommon.h>
 
 namespace kelo
 {
@@ -104,7 +94,21 @@ class Parser2
                 const YAML::Node& node,
                 const std::string& key,
                 T& value,
-                bool print_error_msg = true);
+                bool print_error_msg = true)
+        {
+            if ( !Parser2::hasKey(node, key, print_error_msg) )
+            {
+                return false;
+            }
+            if ( !read(node[key], value, print_error_msg) )
+            {
+                std::stringstream msg;
+                msg << "Could not read YAML::Node with key " << key;
+                Parser2::log(msg.str(), print_error_msg);
+                return false;
+            }
+            return true;
+        }
 
         /**
          * @brief Read value of `node` into `value` when possible. This is used
@@ -128,319 +132,20 @@ class Parser2
         static bool read(
                 const YAML::Node& node,
                 T& value,
-                bool print_error_msg = true);
+                bool print_error_msg = true)
+        {
+            try
+            {
+                value = node.as<T>();
+            }
+            catch ( YAML::Exception& )
+            {
+                Parser2::log("Could not read value of YAML::Node", print_error_msg);
+                return false;
+            }
 
-        /**
-         * @brief Read value of `node` as Point2D object
-         *
-         * example yaml node:
-         * \code{.yaml}
-         *     point_name:
-         *         x: 5.4
-         *         y: 7.6
-         * \endcode
-         *
-         * @param node YAML node that needs to be parsed
-         * @param value Point2D variable to which the parsed values should be
-         * assigned
-         * @param print_error_msg decides whether to print error message when
-         * parsing is unsuccessful.
-         * @return bool success in reading the value
-         */
-        static bool read(
-                const YAML::Node& node,
-                geometry_common::Point2D& value,
-                bool print_error_msg = true);
-
-        /**
-         * @brief Read value of `node` as Point3D object
-         *
-         * example yaml node:
-         * \code{.yaml}
-         *     point_name:
-         *         x: 5.4
-         *         y: 7.6
-         *         z: 9.8
-         * \endcode
-         *
-         * @param node YAML node that needs to be parsed
-         * @param value Point3D variable to which the parsed values should be
-         * assigned
-         * @param print_error_msg decides whether to print error message when
-         * parsing is unsuccessful.
-         * @return bool success in reading the value
-         */
-        static bool read(
-                const YAML::Node& node,
-                geometry_common::Point3D& value,
-                bool print_error_msg = true);
-
-        /**
-         * @brief Read value of `node` as XYTheta object
-         *
-         * example yaml node:
-         * \code{.yaml}
-         *     max_velocity:
-         *         x: 5.4
-         *         y: 7.6
-         *         theta: 9.8
-         * \endcode
-         *
-         * @param node YAML node that needs to be parsed
-         * @param value XYTheta variable to which the parsed values should be
-         * assigned
-         * @param print_error_msg decides whether to print error message when
-         * parsing is unsuccessful.
-         * @return bool success in reading the value
-         */
-        static bool read(
-                const YAML::Node& node,
-                geometry_common::XYTheta& value,
-                bool print_error_msg = true);
-
-        /**
-         * @brief Read value of `node` as Pose2D object
-         *
-         * example yaml node:
-         * \code{.yaml}
-         *     checkpoint:
-         *         x: 5.4
-         *         y: 7.6
-         *         theta: 0.3
-         * \endcode
-         *
-         * @param node YAML node that needs to be parsed
-         * @param value Pose2D variable to which the parsed values should be
-         * assigned
-         * @param print_error_msg decides whether to print error message when
-         * parsing is unsuccessful.
-         * @return bool success in reading the value
-         */
-        static bool read(
-                const YAML::Node& node,
-                geometry_common::Pose2D& value,
-                bool print_error_msg = true);
-
-        /**
-         * @brief Read value of `node` as TransformMatrix2D object
-         *
-         * example yaml node:
-         * \code{.yaml}
-         *     laser_to_base_link_tf:
-         *         x: 5.4
-         *         y: 7.6
-         *         theta: 0.3
-         * \endcode
-         * \code{.yaml}
-         *     lidar_to_base_link_tf:
-         *         x: 5.4
-         *         y: 7.6
-         *         qx: 0.0
-         *         qy: 0.0
-         *         qz: 0.0
-         *         qw: 1.0
-         * \endcode
-         *
-         * @param node YAML node that needs to be parsed
-         * @param value TransformMatrix2D variable to which the parsed values
-         * should be assigned
-         * @param print_error_msg decides whether to print error message when
-         * parsing is unsuccessful.
-         * @return bool success in reading the value
-         */
-        static bool read(
-                const YAML::Node& node,
-                geometry_common::TransformMatrix2D& value,
-                bool print_error_msg = true);
-
-        /**
-         * @brief Read value of `node` as TransformMatrix3D object
-         *
-         * example yaml node:
-         * \code{.yaml}
-         *     camera_to_base_link_tf:
-         *         x: 0.4
-         *         y: 0.2
-         *         z: 1.6
-         *         roll: 0.3
-         *         pitch: 0.4
-         *         yaw: 0.5
-         * \endcode
-         * \code{.yaml}
-         *     camera_to_base_link_tf:
-         *         x: 0.4
-         *         y: 0.6
-         *         z: 1.6
-         *         qx: 0.0
-         *         qy: 0.0
-         *         qz: 0.0
-         *         qw: 1.0
-         * \endcode
-         *
-         * @param node YAML node that needs to be parsed
-         * @param value TransformMatrix3D variable to which the parsed values
-         * should be assigned
-         * @param print_error_msg decides whether to print error message when
-         * parsing is unsuccessful.
-         * @return bool success in reading the value
-         */
-        static bool read(
-                const YAML::Node& node,
-                geometry_common::TransformMatrix3D& value,
-                bool print_error_msg = true);
-
-        /**
-         * @brief Read value of `node` as Box object
-         *
-         * example yaml node:
-         * \code{.yaml}
-         *     collision_box:
-         *         min_x: 0.1
-         *         max_x: 0.4
-         *         min_y: 0.2
-         *         max_y: 0.5
-         *         min_z: 0.3
-         *         max_z: 0.6
-         * \endcode
-         *
-         * @param node YAML node that needs to be parsed
-         * @param value Box variable to which the parsed values should be
-         * assigned
-         * @param print_error_msg decides whether to print error message when
-         * parsing is unsuccessful.
-         * @return bool success in reading the value
-         */
-        static bool read(
-                const YAML::Node& node,
-                geometry_common::Box& value,
-                bool print_error_msg = true);
-
-        /**
-         * @brief Read value of `node` as LineSegment2D object
-         *
-         * example yaml node:
-         * \code{.yaml}
-         *     line_segment_name:
-         *         start:
-         *             x: 10.0
-         *             y: 20.0
-         *         end:
-         *             x: 30.0
-         *             y: 40.0
-         * \endcode
-         *
-         * @param node YAML node that needs to be parsed
-         * @param value LineSegment2D variable to which the parsed values should
-         * be assigned
-         * @param print_error_msg decides whether to print error message when
-         * parsing is unsuccessful.
-         * @return bool success in reading the value
-         */
-        static bool read(
-                const YAML::Node& node,
-                geometry_common::LineSegment2D& value,
-                bool print_error_msg = true);
-
-        /**
-         * @brief Read value of `node` as Polyline2D object
-         *
-         * example yaml node:
-         * \code{.yaml}
-         *     polyline_connections:
-         *         - x: 10.0
-         *           y: 20.0
-         *         - x: 30.0
-         *           y: 40.0
-         *         - x: 50.0
-         *           y: 60.0
-         *         - ...
-         * \endcode
-         * \code{.yaml}
-         *     polyline_connections:
-         *         - {x: 10.0, y: 20.0}
-         *         - {x: 30.0, y: 40.0}
-         *         - {x: 50.0, y: 60.0}
-         *         - ...
-         * \endcode
-         *
-         * @param node YAML node that needs to be parsed
-         * @param value Polyline2D variable to which the parsed values should
-         * be assigned
-         * @param print_error_msg decides whether to print error message when
-         * parsing is unsuccessful.
-         * @return bool success in reading the value
-         */
-        static bool read(
-                const YAML::Node& node,
-                geometry_common::Polyline2D& value,
-                bool print_error_msg = true);
-
-        /**
-         * @brief Read value of `node` as Polygon2D object
-         *
-         * example yaml node:
-         * \code{.yaml}
-         *     polygon_connections:
-         *         - x: 10.0
-         *           y: 20.0
-         *         - x: 30.0
-         *           y: 40.0
-         *         - x: 50.0
-         *           y: 60.0
-         *         - ...
-         * \endcode
-         * \code{.yaml}
-         *     polygon_connections:
-         *         - {x: 10.0, y: 20.0}
-         *         - {x: 30.0, y: 40.0}
-         *         - {x: 50.0, y: 60.0}
-         *         - ...
-         * \endcode
-         *
-         * @param node YAML node that needs to be parsed
-         * @param value Polygon2D variable to which the parsed values should be
-         * assigned
-         * @param print_error_msg decides whether to print error message when
-         * parsing is unsuccessful.
-         * @return bool success in reading the value
-         */
-        static bool read(
-                const YAML::Node& node,
-                geometry_common::Polygon2D& value,
-                bool print_error_msg = true);
-
-        /**
-         * @brief Read value of `node` as PointCloudProjectorConfig object
-         *
-         * example yaml node:
-         * \code{.yaml}
-         *     transform:
-         *         x: 0.4
-         *         y: 0.2
-         *         z: 1.6
-         *         roll: 0.3
-         *         pitch: 0.4
-         *         yaw: 0.5
-         *      angle_min: -1.1
-         *      angle_max: 1.1
-         *      passthrough_min_z: 0.1
-         *      passthrough_max_z: 0.25
-         *      radial_dist_min: 0.1
-         *      radial_dist_max: 3.0
-         *      angle_increment: 0.01
-         * \endcode
-         *
-         * @param node YAML node that needs to be parsed
-         * @param value PointCloudProjectorConfig variable to which the parsed
-         * values should be assigned
-         * @param print_error_msg decides whether to print error message when
-         * parsing is unsuccessful.
-         * @return bool success in reading the value
-         */
-        static bool read(
-                const YAML::Node& node,
-                kelo::PointCloudProjectorConfig& value,
-                bool print_error_msg = true);
+            return true;
+        }
 
         /**
          * @brief Check if `node` contains `key` as one of its key-value pairs
@@ -592,23 +297,6 @@ class Parser2
                 bool print_error_msg = true);
 
         /**
-         * @brief Perform the following sanity checks
-         * 1. `key` is not an empty string
-         * 2. `node` is of YAML map type
-         * 3. `node` contains a key named `key`
-         *
-         * @param node YAML map node
-         * @param key key to be checked
-         * @param print_error_msg decides whether to print error message when
-         * parsing is unsuccessful.
-         * @return success Only true when all sanity checks pass
-         */
-        static bool performSanityChecks(
-                const YAML::Node& node,
-                const std::string& key,
-                bool print_error_msg = true);
-
-        /**
          * @brief Merge two YAML map nodes into one. Exclusive key-value pairs
          * from the input nodes are copied as is. For conflicting keys,
          * values from `override_node` are used.
@@ -622,8 +310,21 @@ class Parser2
                 const YAML::Node& base_node,
                 const YAML::Node& override_node);
 
+    protected:
+
+        /**
+         * @brief TODO
+         *
+         * @param msg
+         * @param print_error_msg
+         */
+        static void log(
+                const std::string& msg,
+                bool print_error_msg = true);
+
 };
 
 } // namespace yaml_common
 } // namespace kelo
+
 #endif // KELO_YAML_COMMON_PARSER_2_H

@@ -268,15 +268,15 @@ TEST(Parser2Test, geometry_common_datatypes)
     EXPECT_EQ(Parser::read<Point2D>(node, "point2d", test_point_2d), true); // read from map with correct key
     EXPECT_EQ(test_point_2d, true_point_2d); // check if value is read correctly
     test_point_2d = default_point_2d;
-    EXPECT_EQ(Parser::read(node["i"], test_point_2d), false); // read value directly from node with another key with value int
+    EXPECT_EQ(Parser::read<Point2D>(node["i"], test_point_2d), false); // read value directly from node with another key with value int
     EXPECT_EQ(test_point_2d, default_point_2d); // check if value is not overwritten
-    EXPECT_EQ(Parser::read(node["point2d2"], test_point_2d), false); // read value from an invalid/empty node
+    EXPECT_EQ(Parser::read<Point2D>(node["point2d2"], test_point_2d), false); // read value from an invalid/empty node
     EXPECT_EQ(test_point_2d, default_point_2d); // check if value is not overwritten
-    EXPECT_EQ(Parser::read(incomplete_point2d_yaml, test_point_2d), false); // read value directly from node with missing keys
+    EXPECT_EQ(Parser::read<Point2D>(incomplete_point2d_yaml, test_point_2d), false); // read value directly from node with missing keys
     EXPECT_EQ(test_point_2d, default_point_2d); // check if value is not overwritten
-    EXPECT_EQ(Parser::read(wrong_point2d_yaml, test_point_2d), false); // read value directly from node with key with value string
+    EXPECT_EQ(Parser::read<Point2D>(wrong_point2d_yaml, test_point_2d), false); // read value directly from node with key with value string
     EXPECT_EQ(test_point_2d, default_point_2d); // check if value is not overwritten
-    EXPECT_EQ(Parser::read(node["point2d"], test_point_2d), true); // read value directly from node with correct key
+    EXPECT_EQ(Parser::read<Point2D>(node["point2d"], test_point_2d), true); // read value directly from node with correct key
     EXPECT_EQ(test_point_2d, true_point_2d); // check if value is read correctly
     EXPECT_EQ(Parser::has<Point2D>(node, "point2d"), true);
     EXPECT_EQ(Parser::has<Point2D>(node, "point2d2"), false);
@@ -295,11 +295,11 @@ TEST(Parser2Test, geometry_common_datatypes)
     EXPECT_EQ(Parser::read<Point3D>(node, "point3d", test_point_3d), true); // read from map with correct key
     EXPECT_EQ(test_point_3d, true_point_3d); // check if value is read correctly
     test_point_3d = default_point_3d;
-    EXPECT_EQ(Parser::read(node["i"], test_point_3d), false); // read value directly from node with another key with value int
+    EXPECT_EQ(Parser::read<Point3D>(node["i"], test_point_3d), false); // read value directly from node with another key with value int
     EXPECT_EQ(test_point_3d, default_point_3d); // check if value is not overwritten
-    EXPECT_EQ(Parser::read(node["point3d2"], test_point_3d), false); // read value from an invalid/empty node
+    EXPECT_EQ(Parser::read<Point3D>(node["point3d2"], test_point_3d), false); // read value from an invalid/empty node
     EXPECT_EQ(test_point_3d, default_point_3d); // check if value is not overwritten
-    EXPECT_EQ(Parser::read(node["point3d"], test_point_3d), true); // read value directly from node with correct key
+    EXPECT_EQ(Parser::read<Point3D>(node["point3d"], test_point_3d), true); // read value directly from node with correct key
     EXPECT_EQ(test_point_3d, true_point_3d); // check if value is read correctly
     EXPECT_EQ(Parser::has<Point3D>(node, "point3d"), true);
     EXPECT_EQ(Parser::has<Point3D>(node, "point3d2"), false);
@@ -318,11 +318,11 @@ TEST(Parser2Test, geometry_common_datatypes)
     EXPECT_EQ(Parser::read<XYTheta>(node, "xytheta", test_xytheta), true); // read from map with correct key
     EXPECT_EQ(test_xytheta, true_xytheta); // check if value is read correctly
     test_xytheta = default_xytheta;
-    EXPECT_EQ(Parser::read(node["i"], test_xytheta), false); // read value directly from node with another key with value int
+    EXPECT_EQ(Parser::read<XYTheta>(node["i"], test_xytheta), false); // read value directly from node with another key with value int
     EXPECT_EQ(test_xytheta, default_xytheta); // check if value is not overwritten
-    EXPECT_EQ(Parser::read(node["xytheta2"], test_xytheta), false); // read value from an invalid/empty node
+    EXPECT_EQ(Parser::read<XYTheta>(node["xytheta2"], test_xytheta), false); // read value from an invalid/empty node
     EXPECT_EQ(test_xytheta, default_xytheta); // check if value is not overwritten
-    EXPECT_EQ(Parser::read(node["xytheta"], test_xytheta), true); // read value directly from node with correct key
+    EXPECT_EQ(Parser::read<XYTheta>(node["xytheta"], test_xytheta), true); // read value directly from node with correct key
     EXPECT_EQ(test_xytheta, true_xytheta); // check if value is read correctly
     EXPECT_EQ(Parser::has<XYTheta>(node, "xytheta"), true);
     EXPECT_EQ(Parser::has<XYTheta>(node, "xytheta2"), false);
@@ -341,11 +341,11 @@ TEST(Parser2Test, geometry_common_datatypes)
     EXPECT_EQ(Parser::read<Pose2D>(node, "pose2d", test_pose_2d), true); // read from map with correct key
     EXPECT_EQ(test_pose_2d, true_pose_2d); // check if value is read correctly
     test_pose_2d = default_pose_2d;
-    EXPECT_EQ(Parser::read(node["i"], test_pose_2d), false); // read value directly from node with another key with value int
+    EXPECT_EQ(Parser::read<Pose2D>(node["i"], test_pose_2d), false); // read value directly from node with another key with value int
     EXPECT_EQ(test_pose_2d, default_pose_2d); // check if value is not overwritten
-    EXPECT_EQ(Parser::read(node["pose2d2"], test_pose_2d), false); // read value from an invalid/empty node
+    EXPECT_EQ(Parser::read<Pose2D>(node["pose2d2"], test_pose_2d), false); // read value from an invalid/empty node
     EXPECT_EQ(test_pose_2d, default_pose_2d); // check if value is not overwritten
-    EXPECT_EQ(Parser::read(node["pose2d"], test_pose_2d), true); // read value directly from node with correct key
+    EXPECT_EQ(Parser::read<Pose2D>(node["pose2d"], test_pose_2d), true); // read value directly from node with correct key
     EXPECT_EQ(test_pose_2d, true_pose_2d); // check if value is read correctly
     EXPECT_EQ(Parser::has<Pose2D>(node, "pose2d"), true);
     EXPECT_EQ(Parser::has<Pose2D>(node, "pose2d2"), false);
@@ -365,11 +365,11 @@ TEST(Parser2Test, geometry_common_datatypes)
     EXPECT_EQ(Parser::read<TransformMatrix2D>(node, "tfmat2d", test_tf_mat_2d), true); // read from map with correct key
     EXPECT_EQ(test_tf_mat_2d, true_tf_mat_2d); // check if value is read correctly
     test_tf_mat_2d = default_tf_mat_2d;
-    EXPECT_EQ(Parser::read(node["i"], test_tf_mat_2d), false); // read value directly from node with another key with value int
+    EXPECT_EQ(Parser::read<TransformMatrix2D>(node["i"], test_tf_mat_2d), false); // read value directly from node with another key with value int
     EXPECT_EQ(test_tf_mat_2d, default_tf_mat_2d); // check if value is not overwritten
-    EXPECT_EQ(Parser::read(node["tfmat2d2"], test_tf_mat_2d), false); // read value from an invalid/empty node
+    EXPECT_EQ(Parser::read<TransformMatrix2D>(node["tfmat2d2"], test_tf_mat_2d), false); // read value from an invalid/empty node
     EXPECT_EQ(test_tf_mat_2d, default_tf_mat_2d); // check if value is not overwritten
-    EXPECT_EQ(Parser::read(node["tfmat2d"], test_tf_mat_2d), true); // read value directly from node with correct key
+    EXPECT_EQ(Parser::read<TransformMatrix2D>(node["tfmat2d"], test_tf_mat_2d), true); // read value directly from node with correct key
     EXPECT_EQ(test_tf_mat_2d, true_tf_mat_2d); // check if value is read correctly
     EXPECT_EQ(Parser::has<TransformMatrix2D>(node, "tfmat2d"), true);
     EXPECT_EQ(Parser::has<TransformMatrix2D>(node, "tfmat2d2"), false);
@@ -389,11 +389,11 @@ TEST(Parser2Test, geometry_common_datatypes)
     EXPECT_EQ(Parser::read<TransformMatrix3D>(node, "tfmat3d", test_tf_mat_3d), true); // read from map with correct key
     EXPECT_EQ(test_tf_mat_3d, true_tf_mat_3d); // check if value is read correctly
     test_tf_mat_3d = default_tf_mat_3d;
-    EXPECT_EQ(Parser::read(node["i"], test_tf_mat_3d), false); // read value directly from node with another key with value int
+    EXPECT_EQ(Parser::read<TransformMatrix3D>(node["i"], test_tf_mat_3d), false); // read value directly from node with another key with value int
     EXPECT_EQ(test_tf_mat_3d, default_tf_mat_3d); // check if value is not overwritten
-    EXPECT_EQ(Parser::read(node["tfmat3d3"], test_tf_mat_3d), false); // read value from an invalid/empty node
+    EXPECT_EQ(Parser::read<TransformMatrix3D>(node["tfmat3d3"], test_tf_mat_3d), false); // read value from an invalid/empty node
     EXPECT_EQ(test_tf_mat_3d, default_tf_mat_3d); // check if value is not overwritten
-    EXPECT_EQ(Parser::read(node["tfmat3d"], test_tf_mat_3d), true); // read value directly from node with correct key
+    EXPECT_EQ(Parser::read<TransformMatrix3D>(node["tfmat3d"], test_tf_mat_3d), true); // read value directly from node with correct key
     EXPECT_EQ(test_tf_mat_3d, true_tf_mat_3d); // check if value is read correctly
     EXPECT_EQ(Parser::has<TransformMatrix3D>(node, "tfmat3d"), true);
     EXPECT_EQ(Parser::has<TransformMatrix3D>(node, "tfmat3d2"), false);
@@ -414,11 +414,11 @@ TEST(Parser2Test, geometry_common_datatypes)
     EXPECT_EQ(Parser::read<Box>(node, "box", test_box), true); // read from map with correct key
     EXPECT_EQ(test_box, true_box); // check if value is read correctly
     test_box = default_box;
-    EXPECT_EQ(Parser::read(node["i"], test_box), false); // read value directly from node with another key with value int
+    EXPECT_EQ(Parser::read<Box>(node["i"], test_box), false); // read value directly from node with another key with value int
     EXPECT_EQ(test_box, default_box); // check if value is not overwritten
-    EXPECT_EQ(Parser::read(node["box2"], test_box), false); // read value from an invalid/empty node
+    EXPECT_EQ(Parser::read<Box>(node["box2"], test_box), false); // read value from an invalid/empty node
     EXPECT_EQ(test_box, default_box); // check if value is not overwritten
-    EXPECT_EQ(Parser::read(node["box"], test_box), true); // read value directly from node with correct key
+    EXPECT_EQ(Parser::read<Box>(node["box"], test_box), true); // read value directly from node with correct key
     EXPECT_EQ(test_box, true_box); // check if value is read correctly
     EXPECT_EQ(Parser::has<Box>(node, "box"), true);
     EXPECT_EQ(Parser::has<Box>(node, "box2"), false);
@@ -437,11 +437,11 @@ TEST(Parser2Test, geometry_common_datatypes)
     EXPECT_EQ(Parser::read<LineSegment2D>(node, "linesegment", test_line_segment), true); // read from map with correct key
     EXPECT_EQ(test_line_segment, true_line_segment); // check if value is read correctly
     test_line_segment = default_line_segment;
-    EXPECT_EQ(Parser::read(node["i"], test_line_segment), false); // read value directly from node with another key with value int
+    EXPECT_EQ(Parser::read<LineSegment2D>(node["i"], test_line_segment), false); // read value directly from node with another key with value int
     EXPECT_EQ(test_line_segment, default_line_segment); // check if value is not overwritten
-    EXPECT_EQ(Parser::read(node["linesegment2"], test_line_segment), false); // read value from an invalid/empty node
+    EXPECT_EQ(Parser::read<LineSegment2D>(node["linesegment2"], test_line_segment), false); // read value from an invalid/empty node
     EXPECT_EQ(test_line_segment, default_line_segment); // check if value is not overwritten
-    EXPECT_EQ(Parser::read(node["linesegment"], test_line_segment), true); // read value directly from node with correct key
+    EXPECT_EQ(Parser::read<LineSegment2D>(node["linesegment"], test_line_segment), true); // read value directly from node with correct key
     EXPECT_EQ(test_line_segment, true_line_segment); // check if value is read correctly
     EXPECT_EQ(Parser::has<LineSegment2D>(node, "linesegment"), true);
     EXPECT_EQ(Parser::has<LineSegment2D>(node, "linesegment2"), false);
@@ -465,11 +465,11 @@ TEST(Parser2Test, geometry_common_datatypes)
     EXPECT_EQ(Parser::read<Polyline2D>(node, "polyline", test_polyline), true); // read from map with correct key
     EXPECT_EQ(test_polyline, true_polyline); // check if value is read correctly
     test_polyline = default_polyline;
-    EXPECT_EQ(Parser::read(node["i"], test_polyline), false); // read value directly from node with another key with value int
+    EXPECT_EQ(Parser::read<Polyline2D>(node["i"], test_polyline), false); // read value directly from node with another key with value int
     EXPECT_EQ(test_polyline, default_polyline); // check if value is not overwritten
-    EXPECT_EQ(Parser::read(node["polyline2"], test_polyline), false); // read value from an invalid/empty node
+    EXPECT_EQ(Parser::read<Polyline2D>(node["polyline2"], test_polyline), false); // read value from an invalid/empty node
     EXPECT_EQ(test_polyline, default_polyline); // check if value is not overwritten
-    EXPECT_EQ(Parser::read(node["polyline"], test_polyline), true); // read value directly from node with correct key
+    EXPECT_EQ(Parser::read<Polyline2D>(node["polyline"], test_polyline), true); // read value directly from node with correct key
     EXPECT_EQ(test_polyline, true_polyline); // check if value is read correctly
     EXPECT_EQ(Parser::has<Polyline2D>(node, "polyline"), true);
     EXPECT_EQ(Parser::has<Polyline2D>(node, "polyline2"), false);
@@ -493,11 +493,11 @@ TEST(Parser2Test, geometry_common_datatypes)
     EXPECT_EQ(Parser::read<Polygon2D>(node, "polygon", test_polygon), true); // read from map with correct key
     EXPECT_EQ(test_polygon, true_polygon); // check if value is read correctly
     test_polygon = default_polygon;
-    EXPECT_EQ(Parser::read(node["i"], test_polygon), false); // read value directly from node with another key with value int
+    EXPECT_EQ(Parser::read<Polygon2D>(node["i"], test_polygon), false); // read value directly from node with another key with value int
     EXPECT_EQ(test_polygon, default_polygon); // check if value is not overwritten
-    EXPECT_EQ(Parser::read(node["polygon2"], test_polygon), false); // read value from an invalid/empty node
+    EXPECT_EQ(Parser::read<Polygon2D>(node["polygon2"], test_polygon), false); // read value from an invalid/empty node
     EXPECT_EQ(test_polygon, default_polygon); // check if value is not overwritten
-    EXPECT_EQ(Parser::read(node["polygon"], test_polygon), true); // read value directly from node with correct key
+    EXPECT_EQ(Parser::read<Polygon2D>(node["polygon"], test_polygon), true); // read value directly from node with correct key
     EXPECT_EQ(test_polygon, true_polygon); // check if value is read correctly
     EXPECT_EQ(Parser::has<Polygon2D>(node, "polygon"), true);
     EXPECT_EQ(Parser::has<Polygon2D>(node, "polygon2"), false);
@@ -519,7 +519,7 @@ TEST(Parser2Test, pointCloudProjectorConfig)
 
     std::cout << node << std::endl;
     Config config;
-    EXPECT_EQ(Parser::read(node, config), true);
+    EXPECT_EQ(Parser::read<Config>(node, config), true);
     EXPECT_NEAR(config.tf_mat.x(), 0.4f, 1e-3f);
     EXPECT_NEAR(config.tf_mat.y(), 0.2f, 1e-3f);
     EXPECT_NEAR(config.tf_mat.z(), 1.6f, 1e-3f);
@@ -604,6 +604,27 @@ TEST(Parser2Test, mergeYAML)
     EXPECT_EQ(Parser::get<int>(node, "b", 0), 7);
     EXPECT_EQ(Parser::get<int>(node, "c", 0), 8);
 
+}
+
+TEST(Parser2Test, sequence)
+{
+    YAML::Node node = YAML::Load("{a: [2, 3, 5, 7, 11]}");
+
+    std::vector<int> int_vec;
+    std::vector<int> truth_vec{2, 3, 5, 7, 11};
+    EXPECT_EQ(Parser::read<std::vector<int>>(node, "a", int_vec), true);
+    EXPECT_EQ(truth_vec, int_vec);
+    int_vec.clear();
+    EXPECT_EQ(Parser::read<std::vector<int>>(node["a"], int_vec), true);
+    EXPECT_EQ(truth_vec, int_vec);
+    EXPECT_EQ(Parser::get<std::vector<int>>(node, "a", std::vector<int>({1, 2})), truth_vec);
+
+    YAML::Node node_pt = YAML::Load("[{x: 2.0, y: 3.0}, {x: 5.0, y: 7.0}]");
+
+    std::vector<Point2D> pt_vec;
+    std::vector<Point2D> truth_pt_vec({Point2D(2, 3), Point2D(5, 7)});
+    EXPECT_EQ(Parser::read<std::vector<Point2D>>(node_pt, pt_vec), true);
+    EXPECT_EQ(truth_pt_vec, pt_vec);
 }
 
 int main(int argc, char **argv)

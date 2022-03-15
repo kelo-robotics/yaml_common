@@ -63,6 +63,7 @@ include_directories(
 add_library(yaml_common
     src/Parser.cpp
     src/Parser2.cpp
+    src/conversions/GeometryCommon.cpp
 )
 target_link_libraries(yaml_common
     ${catkin_LIBRARIES}
