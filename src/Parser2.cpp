@@ -55,20 +55,17 @@ bool Parser2::loadFile(const std::string& abs_file_path,
     }
     catch( const YAML::BadFile& )
     {
-        if ( print_error_msg )
-        {
-            std::cout << "YAML threw BadFile exception. Does the file exist?"
-                      << std::endl << abs_file_path << std::endl;
-        }
+        std::stringstream msg;
+        msg << "YAML threw BadFile exception. Does the file exist?"
+            << std::endl << abs_file_path;
+        Parser2::log(msg.str(), print_error_msg);
         return false;
     }
     catch( const YAML::ParserException& e )
     {
-        if ( print_error_msg )
-        {
-            std::cout << "YAML parsing error" << std::endl
-                      << e.what() << std::endl;
-        }
+        std::stringstream msg;
+        msg << "YAML parsing error" << std::endl << e.what();
+        Parser2::log(msg.str(), print_error_msg);
         return false;
     }
     return true;
@@ -81,10 +78,7 @@ bool Parser2::getAllKeys(
 {
     if ( !node.IsMap() )
     {
-        if ( print_error_msg )
-        {
-            std::cout << "[Parser2] Given YAML::Node is not a map" << std::endl;
-        }
+        Parser2::log("Given YAML::Node is not a map", print_error_msg);
         return false;
     }
 
@@ -96,11 +90,7 @@ bool Parser2::getAllKeys(
         }
         else
         {
-            if ( print_error_msg )
-            {
-                std::cout << "[Parser2] Given YAML::Node map contains a non-scalar key"
-                          << std::endl;
-            }
+            Parser2::log("Given YAML::Node map contains a non-scalar key", print_error_msg);
             return false;
         }
     }
@@ -127,29 +117,21 @@ bool Parser2::hasKey(const YAML::Node& node, const std::string& key,
 {
     if ( key.empty() )
     {
-        if ( print_error_msg )
-        {
-            std::cout << "[Parser2] Given key is empty" << std::endl;
-        }
+        Parser2::log("Given key is empty", print_error_msg);
         return false;
     }
 
     if ( !node.IsMap() )
     {
-        if ( print_error_msg )
-        {
-            std::cout << "[Parser2] Given YAML::Node is not a map" << std::endl;
-        }
+        Parser2::log("Given YAML::Node is not a map", print_error_msg);
         return false;
     }
 
     if ( !node[key] )
     {
-        if ( print_error_msg )
-        {
-            std::cout << "[Parser2] Given YAML::Node does not have key "
-                      << key << std::endl;
-        }
+        std::stringstream msg;
+        msg << "Given YAML::Node does not have key " << key;
+        Parser2::log(msg.str(), print_error_msg);
         return false;
     }
 
@@ -212,7 +194,11 @@ void Parser2::log(const std::string& msg, bool print_error_msg)
 {
     if ( print_error_msg )
     {
-        std::cerr << "[Parser2] " << msg.c_str() << std::endl;
+        std::cout << "\033[31m" // change terminal color to red
+                  << "[Parser2] "
+                  << msg
+                  << "\033[0m" // restore terminal color
+                  << std::endl;
     }
 }
 

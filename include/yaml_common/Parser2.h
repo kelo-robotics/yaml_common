@@ -78,7 +78,9 @@ class Parser2
          * example:
          * \code
          *     bool success = Parser2::read<int>(node, "key", your_int_variable);
+         *     bool success = Parser2::read<std::vector<int>>(node, "key", your_int_vec_variable);
          *     bool success = Parser2::read<Point2D>(node, "key", your_point_variable);
+         *     bool success = Parser2::read<std::vector<Point2D>>(node, "key", your_pt_vec_variable);
          * \endcode
          *
          * @tparam T type of value to be read
@@ -111,17 +113,17 @@ class Parser2
         }
 
         /**
-         * @brief Read value of `node` into `value` when possible. This is used
-         * for generic c++ datatypes (`int`, `float`, `double`, `unsigned int`,
-         * `bool`, `std::string`)
+         * @brief Read value of `node` into `value` when possible.
          *
          * example:
          * \code
          *     bool success = Parser2::read<int>(node, your_int_variable);
+         *     bool success = Parser2::read<std::vector<int>>(node, your_int_vec_variable);
+         *     bool success = Parser2::read<Point2D>(node, your_point_variable);
+         *     bool success = Parser2::read<std::vector<Point2D>>(node, your_pt_vec_variable);
          * \endcode
          *
-         * @tparam T type of value to be read.(`int`, `float`, `double`,
-         * `unsigned int`, `bool`, `std::string`)
+         * @tparam T type of value to be read.
          * @param node YAML node that needs to be parsed
          * @param value variable to which the parsed values should be assigned
          * @param print_error_msg decides whether to print error message when
@@ -313,10 +315,12 @@ class Parser2
     protected:
 
         /**
-         * @brief TODO
+         * @brief Print error message to `std::cout` if `print_error_msg` is
+         * true in red colored font
          *
-         * @param msg
-         * @param print_error_msg
+         * @param msg Message that needs to be printed
+         * @param print_error_msg decides whether to print error message or not.
+         * If it is false, nothing gets printed.
          */
         static void log(
                 const std::string& msg,
