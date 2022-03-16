@@ -535,7 +535,7 @@ TEST(Parser2Test, pointCloudProjectorConfig)
     EXPECT_NEAR(config.angle_increment, 0.01f, 1e-3f);
 }
 
-TEST(Parser2Test, getAllKeys)
+TEST(Parser2Test, readAllKeys)
 {
     YAML::Node transform_node;
     transform_node["x"] = 5.0f;
@@ -554,7 +554,7 @@ TEST(Parser2Test, getAllKeys)
     std::vector<std::string> transform_node_keys = {"x", "y", "z", "roll", "pitch", "yaw"};
 
     std::vector<std::string> parsed_root_node_keys;
-    EXPECT_EQ(Parser::getAllKeys(root_node, parsed_root_node_keys), true);
+    EXPECT_EQ(Parser::readAllKeys(root_node, parsed_root_node_keys), true);
     for ( size_t i = 0; i < root_node_keys.size(); i++ )
     {
         EXPECT_NE(std::find(parsed_root_node_keys.begin(),
@@ -564,7 +564,7 @@ TEST(Parser2Test, getAllKeys)
     }
 
     std::vector<std::string> parsed_transform_node_keys;
-    EXPECT_EQ(Parser::getAllKeys(transform_node, parsed_transform_node_keys), true);
+    EXPECT_EQ(Parser::readAllKeys(transform_node, parsed_transform_node_keys), true);
     for ( size_t i = 0; i < root_node_keys.size(); i++ )
     {
         EXPECT_NE(std::find(parsed_transform_node_keys.begin(),
@@ -574,7 +574,7 @@ TEST(Parser2Test, getAllKeys)
     }
 
     std::vector<std::string> test_keys;
-    EXPECT_EQ(Parser::getAllKeys(root_node["map"], test_keys), false);
+    EXPECT_EQ(Parser::readAllKeys(root_node["map"], test_keys), false);
 }
 
 TEST(Parser2Test, mergeYAML)

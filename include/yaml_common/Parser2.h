@@ -275,7 +275,7 @@ class Parser2
          * @return success Only true when the yaml node is a map and all the 
          * keys where parsed successfully
          */
-        static bool getAllKeys(
+        static bool readAllKeys(
             const YAML::Node& node,
             std::vector<std::string>& keys,
             bool print_error_msg = true);

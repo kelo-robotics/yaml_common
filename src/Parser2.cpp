@@ -71,10 +71,8 @@ bool Parser2::loadFile(const std::string& abs_file_path,
     return true;
 }
 
-bool Parser2::getAllKeys(
-        const YAML::Node& node,
-        std::vector<std::string>& keys,
-        bool print_error_msg)
+bool Parser2::readAllKeys(const YAML::Node& node, std::vector<std::string>& keys,
+                          bool print_error_msg)
 {
     if ( !node.IsMap() )
     {
