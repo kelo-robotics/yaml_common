@@ -9,6 +9,7 @@
 #include <geometry_common/Point3D.h>
 #include <geometry_common/XYTheta.h>
 #include <geometry_common/Pose2D.h>
+#include <geometry_common/Circle.h>
 #include <geometry_common/TransformMatrix2D.h>
 #include <geometry_common/TransformMatrix3D.h>
 #include <geometry_common/LineSegment2D.h>
@@ -22,6 +23,7 @@ using kelo::geometry_common::Point2D;
 using kelo::geometry_common::Point3D;
 using kelo::geometry_common::XYTheta;
 using kelo::geometry_common::Pose2D;
+using kelo::geometry_common::Circle;
 using kelo::geometry_common::TransformMatrix2D;
 using kelo::geometry_common::TransformMatrix3D;
 using kelo::geometry_common::LineSegment2D;
@@ -201,6 +203,12 @@ TEST(Parser2Test, geometry_common_datatypes)
     pose2d_large_theta_yaml["y"] = 6.0f;
     pose2d_large_theta_yaml["theta"] = 30.0f;
 
+    YAML::Node circle_yaml;
+    circle_yaml["x"] = 5.0f;
+    circle_yaml["y"] = 6.0f;
+    circle_yaml["r"] = 7.0f;
+    node["circle"] = circle_yaml;
+
     YAML::Node tfmat2d_yaml;
     tfmat2d_yaml["x"] = 5.0f;
     tfmat2d_yaml["y"] = 6.0f;
@@ -309,6 +317,29 @@ TEST(Parser2Test, geometry_common_datatypes)
     EXPECT_EQ(Parser::get<Point3D>(node, "point3d2", default_point_3d), default_point_3d);
     EXPECT_EQ(Parser::get<Point3D>(node["point3d"], default_point_3d), true_point_3d);
     EXPECT_EQ(Parser::get<Point3D>(node["i"], default_point_3d), default_point_3d);
+
+    Circle true_circle(5.0f, 6.0f, 7.0f);
+    Circle default_circle(2.0f, 3.0f, 4.0f);
+    Circle test_circle = default_circle;
+    EXPECT_EQ(Parser::read<Circle>(node, "circle2", test_circle), false); // read from map but with incorrect key
+    EXPECT_EQ(test_circle, default_circle); // check if value is not overwritten
+    EXPECT_EQ(Parser::read<Circle>(node, "circle", test_circle), true); // read from map with correct key
+    EXPECT_EQ(test_circle, true_circle); // check if value is read correctly
+    test_circle = default_circle;
+    EXPECT_EQ(Parser::read<Circle>(node["i"], test_circle), false); // read value directly from node with another key with value int
+    EXPECT_EQ(test_circle, default_circle); // check if value is not overwritten
+    EXPECT_EQ(Parser::read<Circle>(node["circle2"], test_circle), false); // read value from an invalid/empty node
+    EXPECT_EQ(test_circle, default_circle); // check if value is not overwritten
+    EXPECT_EQ(Parser::read<Circle>(node["circle"], test_circle), true); // read value directly from node with correct key
+    EXPECT_EQ(test_circle, true_circle); // check if value is read correctly
+    EXPECT_EQ(Parser::has<Circle>(node, "circle"), true);
+    EXPECT_EQ(Parser::has<Circle>(node, "circle2"), false);
+    EXPECT_EQ(Parser::is<Circle>(node["circle"]), true);
+    EXPECT_EQ(Parser::is<Circle>(node["i"]), false);
+    EXPECT_EQ(Parser::get<Circle>(node, "circle", default_circle), true_circle);
+    EXPECT_EQ(Parser::get<Circle>(node, "circle2", default_circle), default_circle);
+    EXPECT_EQ(Parser::get<Circle>(node["circle"], default_circle), true_circle);
+    EXPECT_EQ(Parser::get<Circle>(node["i"], default_circle), default_circle);
 
     XYTheta true_xytheta(5.0f, 6.0f, 7.0f);
     XYTheta default_xytheta(2.0f, 3.0f, 4.0f);
@@ -625,10 +656,4 @@ TEST(Parser2Test, sequence)
     std::vector<Point2D> truth_pt_vec({Point2D(2, 3), Point2D(5, 7)});
     EXPECT_EQ(Parser::read<std::vector<Point2D>>(node_pt, pt_vec), true);
     EXPECT_EQ(truth_pt_vec, pt_vec);
-}
-
-int main(int argc, char **argv)
-{
-    testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
 }

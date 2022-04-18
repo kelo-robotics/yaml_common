@@ -48,6 +48,7 @@
 #include <geometry_common/Point3D.h>
 #include <geometry_common/XYTheta.h>
 #include <geometry_common/Pose2D.h>
+#include <geometry_common/Circle.h>
 #include <geometry_common/TransformMatrix2D.h>
 #include <geometry_common/TransformMatrix3D.h>
 #include <geometry_common/LineSegment2D.h>
@@ -63,8 +64,8 @@ namespace YAML
 template<>
 struct convert<kelo::geometry_common::Box>
 {
-    static Node encode(const kelo::geometry_common::Box& pt);
-    static bool decode(const Node& node, kelo::geometry_common::Box& pt);
+    static Node encode(const kelo::geometry_common::Box& box);
+    static bool decode(const Node& node, kelo::geometry_common::Box& box);
 };
 
 template<>
@@ -84,57 +85,64 @@ struct convert<kelo::geometry_common::Point3D>
 template<>
 struct convert<kelo::geometry_common::XYTheta>
 {
-    static Node encode(const kelo::geometry_common::XYTheta& pt);
-    static bool decode(const Node& node, kelo::geometry_common::XYTheta& pt);
+    static Node encode(const kelo::geometry_common::XYTheta& x_y_theta);
+    static bool decode(const Node& node, kelo::geometry_common::XYTheta& x_y_theta);
 };
 
 template<>
 struct convert<kelo::geometry_common::Pose2D>
 {
-    static Node encode(const kelo::geometry_common::Pose2D& pt);
-    static bool decode(const Node& node, kelo::geometry_common::Pose2D& pt);
+    static Node encode(const kelo::geometry_common::Pose2D& pose);
+    static bool decode(const Node& node, kelo::geometry_common::Pose2D& pose);
+};
+
+template<>
+struct convert<kelo::geometry_common::Circle>
+{
+    static Node encode(const kelo::geometry_common::Circle& circle);
+    static bool decode(const Node& node, kelo::geometry_common::Circle& circle);
 };
 
 template<>
 struct convert<kelo::geometry_common::TransformMatrix2D>
 {
-    static Node encode(const kelo::geometry_common::TransformMatrix2D& pt);
-    static bool decode(const Node& node, kelo::geometry_common::TransformMatrix2D& pt);
+    static Node encode(const kelo::geometry_common::TransformMatrix2D& tf_mat);
+    static bool decode(const Node& node, kelo::geometry_common::TransformMatrix2D& tf_mat);
 };
 
 template<>
 struct convert<kelo::geometry_common::TransformMatrix3D>
 {
-    static Node encode(const kelo::geometry_common::TransformMatrix3D& pt);
-    static bool decode(const Node& node, kelo::geometry_common::TransformMatrix3D& pt);
+    static Node encode(const kelo::geometry_common::TransformMatrix3D& tf_mat);
+    static bool decode(const Node& node, kelo::geometry_common::TransformMatrix3D& tf_mat);
 };
 
 template<>
 struct convert<kelo::geometry_common::LineSegment2D>
 {
-    static Node encode(const kelo::geometry_common::LineSegment2D& pt);
-    static bool decode(const Node& node, kelo::geometry_common::LineSegment2D& pt);
+    static Node encode(const kelo::geometry_common::LineSegment2D& line_segment);
+    static bool decode(const Node& node, kelo::geometry_common::LineSegment2D& line_segment);
 };
 
 template<>
 struct convert<kelo::geometry_common::Polyline2D>
 {
-    static Node encode(const kelo::geometry_common::Polyline2D& pt);
-    static bool decode(const Node& node, kelo::geometry_common::Polyline2D& pt);
+    static Node encode(const kelo::geometry_common::Polyline2D& polyline);
+    static bool decode(const Node& node, kelo::geometry_common::Polyline2D& polyline);
 };
 
 template<>
 struct convert<kelo::geometry_common::Polygon2D>
 {
-    static Node encode(const kelo::geometry_common::Polygon2D& pt);
-    static bool decode(const Node& node, kelo::geometry_common::Polygon2D& pt);
+    static Node encode(const kelo::geometry_common::Polygon2D& polygon);
+    static bool decode(const Node& node, kelo::geometry_common::Polygon2D& polygon);
 };
 
 template<>
 struct convert<kelo::PointCloudProjectorConfig>
 {
-    static Node encode(const kelo::PointCloudProjectorConfig& pt);
-    static bool decode(const Node& node, kelo::PointCloudProjectorConfig& pt);
+    static Node encode(const kelo::PointCloudProjectorConfig& config);
+    static bool decode(const Node& node, kelo::PointCloudProjectorConfig& config);
 };
 
 } // namespace YAML

@@ -153,6 +153,26 @@ bool convert<kelo::geometry_common::Pose2D>::decode(
 
 
 
+Node convert<kelo::geometry_common::Circle>::encode(
+        const kelo::geometry_common::Circle& circle)
+{
+    Node node;
+    node["x"] = circle.x;
+    node["y"] = circle.y;
+    node["r"] = circle.r;
+    return node;
+}
+
+bool convert<kelo::geometry_common::Circle>::decode(
+        const Node& node, kelo::geometry_common::Circle& circle)
+{
+    return ( kelo::yaml_common::Parser2::read<float>(node, "x", circle.x) &&
+             kelo::yaml_common::Parser2::read<float>(node, "y", circle.y) &&
+             kelo::yaml_common::Parser2::read<float>(node, "r", circle.r) );
+}
+
+
+
 Node convert<kelo::geometry_common::TransformMatrix2D>::encode(
         const kelo::geometry_common::TransformMatrix2D& tf_mat)
 {

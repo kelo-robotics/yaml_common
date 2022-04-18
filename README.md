@@ -21,3 +21,13 @@ We use [Doxygen](https://www.doxygen.nl/index.html) for code documentation.
 
 - The documentation will be generated at
   `<YOUR_CATKIN_WS>/build/yaml_common/docs/html/index.html`
+
+## Test
+
+Run unit tests with
+
+```bash
+catkin build --this --catkin-make-args run_tests -- && rosrun yaml_common yaml_common_test
+```
+
+**Note**: Requires `GTest` package (`sudo apt install libgtest-dev`)
