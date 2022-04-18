@@ -58,9 +58,9 @@ bool Parser::hasInt(const YAML::Node& node, std::string key)
     try
     {
         if (key.empty())
-            int i = node.as<int>();
+            node.as<int>();
         else
-            int i = node[key].as<int>();
+            node[key].as<int>();
         return true;
     }
     catch (YAML::Exception&)
@@ -75,9 +75,9 @@ bool Parser::hasDouble(const YAML::Node& node, std::string key)
     try
     {
         if (key.empty())
-            double d = node.as<double>();
+            node.as<double>();
         else
-            double d = node[key].as<double>();
+            node[key].as<double>();
         return true;
     }
     catch (YAML::Exception&)
@@ -100,9 +100,9 @@ bool Parser::hasBool(const YAML::Node& node, std::string key)
     try
     {
         if (key.empty())
-            bool bc = node.as<bool>();
+            node.as<bool>();
         else
-            bool bc = node[key].as<bool>();
+            node[key].as<bool>();
         return true;
     }
     catch (YAML::Exception&)
