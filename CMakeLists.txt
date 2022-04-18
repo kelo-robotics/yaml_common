@@ -74,12 +74,7 @@ target_link_libraries(yaml_common
 # TESTS
 # =====
 if (CATKIN_ENABLE_TESTING)
-    catkin_add_gtest(parser_2_test
-        test/parser_2_test.cpp
-    )
-    target_link_libraries(parser_2_test
-        yaml_common
-    )
+    add_subdirectory(test)
 endif ()
 
 

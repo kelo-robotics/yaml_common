@@ -657,9 +657,3 @@ TEST(Parser2Test, sequence)
     EXPECT_EQ(Parser::read<std::vector<Point2D>>(node_pt, pt_vec), true);
     EXPECT_EQ(truth_pt_vec, pt_vec);
 }
-
-int main(int argc, char **argv)
-{
-    testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
-}
