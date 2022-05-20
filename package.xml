@@ -5,11 +5,13 @@
     <description>Utility functions for parsing YAML data</description>
 
     <author email="nowak@kelo-robotics.com">Walter Nowak</author>
+    <author email="sushant.chavan@kelo-robotics.com">Sushant Chavan</author>
+    <author email="dharmin.bakaraniya@kelo-robotics.com">Dharmin B.</author>
 
     <maintainer email="nowak@kelo-robotics.com">Walter Nowak</maintainer>
     <maintainer email="sushant.chavan@kelo-robotics.com">Sushant Chavan</maintainer>
 
-    <license>internal</license>
+    <license>LGPL/BSD</license>
 
     <buildtool_depend>catkin</buildtool_depend>
     <depend>geometry_common</depend>
