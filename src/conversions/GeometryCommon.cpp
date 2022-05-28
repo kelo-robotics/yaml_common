@@ -44,8 +44,30 @@
 namespace YAML
 {
 
-Node convert<kelo::geometry_common::Box>::encode(
-        const kelo::geometry_common::Box& box)
+Node convert<kelo::geometry_common::Box2D>::encode(
+        const kelo::geometry_common::Box2D& box)
+{
+    Node node;
+    node["min_x"] = box.min_x;
+    node["max_x"] = box.max_x;
+    node["min_y"] = box.min_y;
+    node["max_y"] = box.max_y;
+    return node;
+}
+
+bool convert<kelo::geometry_common::Box2D>::decode(
+        const Node& node, kelo::geometry_common::Box2D& box)
+{
+    return ( kelo::yaml_common::Parser2::read<float>(node, "min_x", box.min_x) &&
+             kelo::yaml_common::Parser2::read<float>(node, "max_x", box.max_x) &&
+             kelo::yaml_common::Parser2::read<float>(node, "min_y", box.min_y) &&
+             kelo::yaml_common::Parser2::read<float>(node, "max_y", box.max_y) );
+}
+
+
+
+Node convert<kelo::geometry_common::Box3D>::encode(
+        const kelo::geometry_common::Box3D& box)
 {
     Node node;
     node["min_x"] = box.min_x;
@@ -57,8 +79,8 @@ Node convert<kelo::geometry_common::Box>::encode(
     return node;
 }
 
-bool convert<kelo::geometry_common::Box>::decode(
-        const Node& node, kelo::geometry_common::Box& box)
+bool convert<kelo::geometry_common::Box3D>::decode(
+        const Node& node, kelo::geometry_common::Box3D& box)
 {
     return ( kelo::yaml_common::Parser2::read<float>(node, "min_x", box.min_x) &&
              kelo::yaml_common::Parser2::read<float>(node, "max_x", box.max_x) &&

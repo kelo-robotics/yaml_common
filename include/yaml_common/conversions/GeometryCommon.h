@@ -43,7 +43,8 @@
 
 #include <yaml-cpp/yaml.h>
 
-#include <geometry_common/Box.h>
+#include <geometry_common/Box2D.h>
+#include <geometry_common/Box3D.h>
 #include <geometry_common/Point2D.h>
 #include <geometry_common/Point3D.h>
 #include <geometry_common/XYTheta.h>
@@ -62,10 +63,17 @@ namespace YAML
 {
 
 template<>
-struct convert<kelo::geometry_common::Box>
+struct convert<kelo::geometry_common::Box2D>
 {
-    static Node encode(const kelo::geometry_common::Box& box);
-    static bool decode(const Node& node, kelo::geometry_common::Box& box);
+    static Node encode(const kelo::geometry_common::Box2D& box);
+    static bool decode(const Node& node, kelo::geometry_common::Box2D& box);
+};
+
+template<>
+struct convert<kelo::geometry_common::Box3D>
+{
+    static Node encode(const kelo::geometry_common::Box3D& box);
+    static bool decode(const Node& node, kelo::geometry_common::Box3D& box);
 };
 
 template<>
