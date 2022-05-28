@@ -4,7 +4,8 @@
 
 #include <yaml_common/Parser2.h>
 
-#include <geometry_common/Box.h>
+#include <geometry_common/Box2D.h>
+#include <geometry_common/Box3D.h>
 #include <geometry_common/Point2D.h>
 #include <geometry_common/Point3D.h>
 #include <geometry_common/XYTheta.h>
@@ -18,7 +19,8 @@
 #include <geometry_common/PointCloudProjector.h>
 
 using Parser = kelo::yaml_common::Parser2;
-using kelo::geometry_common::Box;
+using kelo::geometry_common::Box2D;
+using kelo::geometry_common::Box3D;
 using kelo::geometry_common::Point2D;
 using kelo::geometry_common::Point3D;
 using kelo::geometry_common::XYTheta;
@@ -241,14 +243,21 @@ TEST(Parser2Test, geometry_common_datatypes)
     tfmat3d_quat_yaml["qz"] = 0.0f;
     tfmat3d_quat_yaml["qw"] = 1.0f;
 
-    YAML::Node box_yaml;
-    box_yaml["min_x"] = 5.0f;
-    box_yaml["min_y"] = 5.0f;
-    box_yaml["min_z"] = 5.0f;
-    box_yaml["max_x"] = 6.0f;
-    box_yaml["max_y"] = 6.0f;
-    box_yaml["max_z"] = 6.0f;
-    node["box"] = box_yaml;
+    YAML::Node box_2d_yaml;
+    box_2d_yaml["min_x"] = 5.0f;
+    box_2d_yaml["min_y"] = 5.0f;
+    box_2d_yaml["max_x"] = 6.0f;
+    box_2d_yaml["max_y"] = 6.0f;
+    node["box_2d"] = box_2d_yaml;
+
+    YAML::Node box_3d_yaml;
+    box_3d_yaml["min_x"] = 5.0f;
+    box_3d_yaml["min_y"] = 5.0f;
+    box_3d_yaml["min_z"] = 5.0f;
+    box_3d_yaml["max_x"] = 6.0f;
+    box_3d_yaml["max_y"] = 6.0f;
+    box_3d_yaml["max_z"] = 6.0f;
+    node["box_3d"] = box_3d_yaml;
 
     YAML::Node line_segment_yaml;
     YAML::Node line_segment_start_yaml;
@@ -437,28 +446,51 @@ TEST(Parser2Test, geometry_common_datatypes)
     EXPECT_EQ(Parser::get<TransformMatrix3D>(tfmat3d_quat_yaml, default_tf_mat_3d),
               TransformMatrix3D(5.0f, 6.0f, 7.0f, 0.0f, 0.0f, 0.0f));
 
-    Box true_box(5.0f, 6.0f, 5.0f, 6.0f, 5.0f, 6.0f);
-    Box default_box(2.0f, 3.0f, 2.0f, 3.0f, 2.0f, 3.0f);
-    Box test_box = default_box;
-    EXPECT_EQ(Parser::read<Box>(node, "box2", test_box), false); // read from map but with incorrect key
-    EXPECT_EQ(test_box, default_box); // check if value is not overwritten
-    EXPECT_EQ(Parser::read<Box>(node, "box", test_box), true); // read from map with correct key
-    EXPECT_EQ(test_box, true_box); // check if value is read correctly
-    test_box = default_box;
-    EXPECT_EQ(Parser::read<Box>(node["i"], test_box), false); // read value directly from node with another key with value int
-    EXPECT_EQ(test_box, default_box); // check if value is not overwritten
-    EXPECT_EQ(Parser::read<Box>(node["box2"], test_box), false); // read value from an invalid/empty node
-    EXPECT_EQ(test_box, default_box); // check if value is not overwritten
-    EXPECT_EQ(Parser::read<Box>(node["box"], test_box), true); // read value directly from node with correct key
-    EXPECT_EQ(test_box, true_box); // check if value is read correctly
-    EXPECT_EQ(Parser::has<Box>(node, "box"), true);
-    EXPECT_EQ(Parser::has<Box>(node, "box2"), false);
-    EXPECT_EQ(Parser::is<Box>(node["box"]), true);
-    EXPECT_EQ(Parser::is<Box>(node["i"]), false);
-    EXPECT_EQ(Parser::get<Box>(node, "box", default_box), true_box);
-    EXPECT_EQ(Parser::get<Box>(node, "box2", default_box), default_box);
-    EXPECT_EQ(Parser::get<Box>(node["box"], default_box), true_box);
-    EXPECT_EQ(Parser::get<Box>(node["i"], default_box), default_box);
+    Box2D true_box_2d(5.0f, 6.0f, 5.0f, 6.0f);
+    Box2D default_box_2d(2.0f, 3.0f, 2.0f, 3.0f);
+    Box2D test_box_2d = default_box_2d;
+    EXPECT_EQ(Parser::read<Box2D>(node, "box2", test_box_2d), false); // read from map but with incorrect key
+    EXPECT_EQ(test_box_2d, default_box_2d); // check if value is not overwritten
+    EXPECT_EQ(Parser::read<Box2D>(node, "box_2d", test_box_2d), true); // read from map with correct key
+    EXPECT_EQ(test_box_2d, true_box_2d); // check if value is read correctly
+    test_box_2d = default_box_2d;
+    EXPECT_EQ(Parser::read<Box2D>(node["i"], test_box_2d), false); // read value directly from node with another key with value int
+    EXPECT_EQ(test_box_2d, default_box_2d); // check if value is not overwritten
+    EXPECT_EQ(Parser::read<Box2D>(node["box2"], test_box_2d), false); // read value from an invalid/empty node
+    EXPECT_EQ(test_box_2d, default_box_2d); // check if value is not overwritten
+    EXPECT_EQ(Parser::read<Box2D>(node["box_2d"], test_box_2d), true); // read value directly from node with correct key
+    EXPECT_EQ(test_box_2d, true_box_2d); // check if value is read correctly
+    EXPECT_EQ(Parser::has<Box2D>(node, "box_2d"), true);
+    EXPECT_EQ(Parser::has<Box2D>(node, "box2"), false);
+    EXPECT_EQ(Parser::is<Box2D>(node["box_2d"]), true);
+    EXPECT_EQ(Parser::is<Box2D>(node["i"]), false);
+    EXPECT_EQ(Parser::get<Box2D>(node, "box_2d", default_box_2d), true_box_2d);
+    EXPECT_EQ(Parser::get<Box2D>(node, "box2", default_box_2d), default_box_2d);
+    EXPECT_EQ(Parser::get<Box2D>(node["box_2d"], default_box_2d), true_box_2d);
+    EXPECT_EQ(Parser::get<Box2D>(node["i"], default_box_2d), default_box_2d);
+
+    Box3D true_box_3d(5.0f, 6.0f, 5.0f, 6.0f, 5.0f, 6.0f);
+    Box3D default_box_3d(2.0f, 3.0f, 2.0f, 3.0f, 2.0f, 3.0f);
+    Box3D test_box_3d = default_box_3d;
+    EXPECT_EQ(Parser::read<Box3D>(node, "box2", test_box_3d), false); // read from map but with incorrect key
+    EXPECT_EQ(test_box_3d, default_box_3d); // check if value is not overwritten
+    EXPECT_EQ(Parser::read<Box3D>(node, "box_3d", test_box_3d), true); // read from map with correct key
+    EXPECT_EQ(test_box_3d, true_box_3d); // check if value is read correctly
+    test_box_3d = default_box_3d;
+    EXPECT_EQ(Parser::read<Box3D>(node["i"], test_box_3d), false); // read value directly from node with another key with value int
+    EXPECT_EQ(test_box_3d, default_box_3d); // check if value is not overwritten
+    EXPECT_EQ(Parser::read<Box3D>(node["box2"], test_box_3d), false); // read value from an invalid/empty node
+    EXPECT_EQ(test_box_3d, default_box_3d); // check if value is not overwritten
+    EXPECT_EQ(Parser::read<Box3D>(node["box_3d"], test_box_3d), true); // read value directly from node with correct key
+    EXPECT_EQ(test_box_3d, true_box_3d); // check if value is read correctly
+    EXPECT_EQ(Parser::has<Box3D>(node, "box_3d"), true);
+    EXPECT_EQ(Parser::has<Box3D>(node, "box2"), false);
+    EXPECT_EQ(Parser::is<Box3D>(node["box_3d"]), true);
+    EXPECT_EQ(Parser::is<Box3D>(node["i"]), false);
+    EXPECT_EQ(Parser::get<Box3D>(node, "box_3d", default_box_3d), true_box_3d);
+    EXPECT_EQ(Parser::get<Box3D>(node, "box2", default_box_3d), default_box_3d);
+    EXPECT_EQ(Parser::get<Box3D>(node["box_3d"], default_box_3d), true_box_3d);
+    EXPECT_EQ(Parser::get<Box3D>(node["i"], default_box_3d), default_box_3d);
 
     LineSegment2D true_line_segment(2.0f, 3.0f, 5.0f, 6.0f);
     LineSegment2D default_line_segment(0.0f, 0.0f, 1.0f, 1.0f);
@@ -548,7 +580,6 @@ TEST(Parser2Test, pointCloudProjectorConfig)
             radial_dist_min: 0.1, radial_dist_max: 3.0,\
             angle_increment: 0.01}");
 
-    std::cout << node << std::endl;
     Config config;
     EXPECT_EQ(Parser::read<Config>(node, config), true);
     EXPECT_NEAR(config.tf_mat.x(), 0.4f, 1e-3f);
