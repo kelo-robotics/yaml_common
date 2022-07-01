@@ -16,6 +16,6 @@ build_and_test:
   script:
     - docker build --build-arg SSH_KEY="$SSH_PRIVATE_DEPLOY_KEY" --no-cache  -t $IMAGE_NAME .
     - docker system prune -f
-  # only:
-  #   - master
-  #   - develop
+  only:
+    - master
+    - develop
