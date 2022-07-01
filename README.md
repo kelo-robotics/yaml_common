@@ -1,5 +1,7 @@
 # YAML common
 
+[![build status](https://git.locomotec.com:444/kelo/common/yaml_common/badges/master/build.svg)](https://git.locomotec.com:444/kelo/common/yaml_common/commits/master)
+
 A ROS package with helper functions to parse and manipulate YAML data
 
 ## Documentation
