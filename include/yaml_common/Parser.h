@@ -41,7 +41,9 @@
 #ifndef KELO_YAML_COMMON_PARSER_H
 #define KELO_YAML_COMMON_PARSER_H
 
+#ifdef USE_GEOMETRY_COMMON
 #include <geometry_common/Pose2D.h>
+#endif // USE_GEOMETRY_COMMON
 #include <yaml-cpp/yaml.h>
 
 namespace kelo
@@ -214,6 +216,7 @@ class Parser
     static std::string getString(const YAML::Node& node,
                                      std::string key = "");
 
+#ifdef USE_GEOMETRY_COMMON
     /**
      * @brief Parse a YAML node into a 2D pose object
      *
@@ -235,6 +238,7 @@ class Parser
      */
     static geometry_common::Pose2D getPose(const YAML::Node& node,
                                                std::string key);
+#endif // USE_GEOMETRY_COMMON
 
     /**
      * @brief Parse a value of a key-value pair inside a YAML node into time
