@@ -4,6 +4,7 @@
 
 #include <yaml_common/Parser2.h>
 
+#ifdef USE_GEOMETRY_COMMON
 #include <geometry_common/Box2D.h>
 #include <geometry_common/Box3D.h>
 #include <geometry_common/Point2D.h>
@@ -18,7 +19,6 @@
 #include <geometry_common/Polygon2D.h>
 #include <geometry_common/PointCloudProjector.h>
 
-using Parser = kelo::yaml_common::Parser2;
 using kelo::geometry_common::Box2D;
 using kelo::geometry_common::Box3D;
 using kelo::geometry_common::Point2D;
@@ -32,6 +32,9 @@ using kelo::geometry_common::LineSegment2D;
 using kelo::geometry_common::Polyline2D;
 using kelo::geometry_common::Polygon2D;
 using Config = kelo::PointCloudProjectorConfig;
+#endif // USE_GEOMETRY_COMMON
+
+using Parser = kelo::yaml_common::Parser2;
 
 TEST(Parser2Test, generic_datatypes)
 {
@@ -166,6 +169,7 @@ TEST(Parser2Test, generic_datatypes)
     EXPECT_EQ(Parser::get<std::string>(node["s"], "xyz"), "abc");
 }
 
+#ifdef USE_GEOMETRY_COMMON
 TEST(Parser2Test, geometry_common_datatypes)
 {
     YAML::Node node;
@@ -596,6 +600,7 @@ TEST(Parser2Test, pointCloudProjectorConfig)
     EXPECT_NEAR(config.radial_dist_max, 3.0f, 1e-3f);
     EXPECT_NEAR(config.angle_increment, 0.01f, 1e-3f);
 }
+#endif // USE_GEOMETRY_COMMON
 
 TEST(Parser2Test, readAllKeys)
 {
@@ -681,10 +686,12 @@ TEST(Parser2Test, sequence)
     EXPECT_EQ(truth_vec, int_vec);
     EXPECT_EQ(Parser::get<std::vector<int>>(node, "a", std::vector<int>({1, 2})), truth_vec);
 
+#ifdef USE_GEOMETRY_COMMON
     YAML::Node node_pt = YAML::Load("[{x: 2.0, y: 3.0}, {x: 5.0, y: 7.0}]");
 
     std::vector<Point2D> pt_vec;
     std::vector<Point2D> truth_pt_vec({Point2D(2, 3), Point2D(5, 7)});
     EXPECT_EQ(Parser::read<std::vector<Point2D>>(node_pt, pt_vec), true);
     EXPECT_EQ(truth_pt_vec, pt_vec);
+#endif // USE_GEOMETRY_COMMON
 }
