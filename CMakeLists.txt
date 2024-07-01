@@ -3,30 +3,21 @@ project(yaml_common)
 
 add_compile_options(-std=c++11 -Wall -Wextra)
 
-option(BUILD_WITH_GEOMETRY_COMMON "Build with geometry_common as dependency" ON)
-
 if (WIN32)
     find_package(yaml-cpp REQUIRED)
 else (WIN32)
     set(YAML_CPP_LIBRARIES yaml-cpp)
 endif (WIN32)
 
-set(dependency "")
-if(BUILD_WITH_GEOMETRY_COMMON)
-    set(dependency ${dependency} geometry_common)
-    message("Building with geometry_common dependency")
-    add_definitions(-DUSE_GEOMETRY_COMMON)
-endif(BUILD_WITH_GEOMETRY_COMMON)
-
 find_package(catkin REQUIRED COMPONENTS
-    ${dependency}
+    geometry_common
 )
 
 find_package (yaml-cpp REQUIRED)
 
 catkin_package(
     CATKIN_DEPENDS
-        ${dependency}
+        geometry_common
     INCLUDE_DIRS
         include
         ${YAML_CPP_INCLUDE_DIRS}
@@ -69,17 +60,10 @@ include_directories(
 # =========
 # LIBRARIES
 # =========
-set(source_files
+add_library(yaml_common
     src/Parser.cpp
     src/Parser2.cpp
-)
-
-if(BUILD_WITH_GEOMETRY_COMMON)
-    set(source_files ${source_files} src/conversions/GeometryCommon.cpp)
-endif(BUILD_WITH_GEOMETRY_COMMON)
-
-add_library(yaml_common
-    ${source_files}
+    src/conversions/GeometryCommon.cpp
 )
 target_link_libraries(yaml_common
     ${catkin_LIBRARIES}

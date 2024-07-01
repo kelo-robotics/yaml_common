@@ -223,7 +223,6 @@ bool Parser::hasPose(const YAML::Node& node)
             node[0].IsScalar() && node[1].IsScalar() && node[2].IsScalar());
 }
 
-#ifdef USE_GEOMETRY_COMMON
 geometry_common::Pose2D Parser::getPose(const YAML::Node& node,
                                             std::string key)
 {
@@ -243,7 +242,6 @@ geometry_common::Pose2D Parser::getPose(const YAML::Node& node)
     return geometry_common::Pose2D(node[0].as<double>(), node[1].as<double>(),
                                    node[2].as<double>());
 }
-#endif // USE_GEOMETRY_COMMON
 
 bool Parser::hasTime(const YAML::Node& node, std::string key)
 {

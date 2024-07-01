@@ -43,9 +43,7 @@
 
 #include <yaml-cpp/yaml.h>
 
-#ifdef USE_GEOMETRY_COMMON
 #include <yaml_common/conversions/GeometryCommon.h>
-#endif // USE_GEOMETRY_COMMON
 
 namespace kelo
 {

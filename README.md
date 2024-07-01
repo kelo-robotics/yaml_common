@@ -4,16 +4,6 @@
 
 A ROS package with helper functions to parse and manipulate YAML data
 
-## Dependencies
-
-- yaml-cpp (`sudo apt install libyaml-cpp-dev`)
-- [geometry_common](https://github.com/kelo-robotics/geometry_common) (optional)
-
-To build without `geometry_common`, execute
-```bash
-catkin build yaml_common -DBUILD_WITH_GEOMETRY_COMMON=OFF
-```
-
 ## Documentation
 
 We use [Doxygen](https://www.doxygen.nl/index.html) for code documentation.
@@ -39,7 +29,7 @@ We use [Doxygen](https://www.doxygen.nl/index.html) for code documentation.
 Run unit tests with
 
 ```bash
-catkin test --this
+catkin build --this --catkin-make-args run_tests -- && rosrun yaml_common yaml_common_test
 ```
 
 **Note**: Requires `GTest` package (`sudo apt install libgtest-dev`)
