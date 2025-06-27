@@ -204,6 +204,66 @@ YAML::Node Parser2::mergeYAML(const YAML::Node& base_node,
     return YAML::Node(new_node);
 }
 
+bool Parser2::isEqual(const YAML::Node& n1, const YAML::Node& n2)
+{
+    if ( n1.Type() != n2.Type() )
+    {
+        return false;
+    }
+
+    switch ( n1.Type() )
+    {
+        case 0: // undefined
+        case 1: // null
+            return true;
+        case 2: // scalar
+        {
+            return ( Parser2::get<std::string>(n1, "a") ==
+                     Parser2::get<std::string>(n2, "b") );
+        }
+        case 3: // sequence
+        {
+            if ( n1.size() != n2.size() )
+            {
+                return false;
+            }
+            for ( size_t i = 0; i < n1.size(); i++ )
+            {
+                if ( !Parser2::isEqual(n1[i], n2[i]) )
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        case 4: // map
+        {
+            if ( n1.size() != n2.size() )
+            {
+                return false;
+            }
+            std::vector<std::string> keys;
+            if ( !Parser2::readAllKeys(n1, keys, false) )
+            {
+                return false; // not handling when keys cannot be read; simply return not equal
+            }
+            for ( const std::string& key : keys )
+            {
+                if ( !Parser2::hasKey(n2, key, false) )
+                {
+                    return false;
+                }
+                if ( !Parser2::isEqual(n1[key], n2[key]) )
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+    return false;
+}
+
 void Parser2::log(const std::string& msg, bool print_error_msg)
 {
     if ( print_error_msg )

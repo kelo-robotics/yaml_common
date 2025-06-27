@@ -328,6 +328,20 @@ class Parser2
                 const YAML::Node& base_node,
                 const YAML::Node& override_node);
 
+        /**
+         * @brief Loosely check if two nodes are equal or not.
+         * *NOTE*: Casts to std::string for scalar. Implies that 5.0 == 5 and "5" == 5
+         * *NOTE*: for map type, if keys are not strings, will return false
+         *
+         * @param n1 first node
+         * @param n2 second node
+         *
+         * @return true if n1 == n2, false otherwise
+         */
+        static bool isEqual(
+                const YAML::Node& n1,
+                const YAML::Node& n2);
+
     protected:
 
         /**

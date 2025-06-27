@@ -711,3 +711,82 @@ TEST(Parser2Test, loadString)
     EXPECT_EQ(Parser::loadString("{{}", node2), false);
     std::cout << node2 << std::endl;
 }
+
+TEST(Parser2Test, isEqualSimple)
+{
+    YAML::Node n1;
+    YAML::Node n2;
+    EXPECT_TRUE(Parser::isEqual(n1, n2)); // check null
+
+    n1 = 5;
+    EXPECT_FALSE(Parser::isEqual(n1, n2));
+
+    n2 = 5;
+    EXPECT_TRUE(Parser::isEqual(n1, n2));
+
+    n1 = 5.5;
+    EXPECT_FALSE(Parser::isEqual(n1, n2));
+
+    n1 = 5.0;
+    EXPECT_TRUE(Parser::isEqual(n1, n2)); // 5.0 == 5
+
+    n1 = "5";
+    EXPECT_TRUE(Parser::isEqual(n1, n2)); // "5" == 5
+
+    n1 = "55";
+    EXPECT_FALSE(Parser::isEqual(n1, n2));
+}
+
+TEST(Parser2Test, isEqualSequence)
+{
+    YAML::Node n1;
+    n1.push_back(1);
+    n1.push_back(2);
+
+    YAML::Node n2;
+
+    EXPECT_FALSE(Parser::isEqual(n1, n2));
+
+    n2.push_back(1);
+    EXPECT_FALSE(Parser::isEqual(n1, n2));
+
+    n2.push_back(2);
+    EXPECT_FALSE(n1 == n2); // default equality operator doesn't work
+    EXPECT_TRUE(Parser::isEqual(n1, n2));
+
+    n2.push_back("3");
+    EXPECT_FALSE(Parser::isEqual(n1, n2));
+
+    n1.push_back(3);
+    EXPECT_TRUE(Parser::isEqual(n1, n2)); // "3" == 3
+}
+
+TEST(Parser2Test, isEqualMap)
+{
+    YAML::Node n1;
+    n1["a"] = 1;
+    n1["b"] = 2;
+    n1["v"] = std::vector<int>({3,4});
+
+    YAML::Node n2, n3;
+
+    EXPECT_FALSE(Parser::isEqual(n1, n2));
+
+    n3 = 5;
+    EXPECT_FALSE(Parser::isEqual(n1, n3));
+
+    n2["a"] = 1;
+    n2["b"] = 2;
+    EXPECT_FALSE(Parser::isEqual(n1, n2));
+
+    n2["v"].push_back(3);
+    EXPECT_FALSE(Parser::isEqual(n1, n2));
+
+    n2["v"].push_back(4);
+    EXPECT_FALSE(n1 == n2); // default equality operator doesn't work
+    EXPECT_TRUE(Parser::isEqual(n1, n2));
+
+    n2["b"] = 3;
+    EXPECT_FALSE(Parser::isEqual(n1, n2));
+}
+
