@@ -71,6 +71,22 @@ bool Parser2::loadFile(const std::string& abs_file_path,
     return true;
 }
 
+bool Parser2::loadString(const std::string& s, YAML::Node& node, bool print_error_msg)
+{
+    try
+    {
+        node = YAML::Load(s);
+    }
+    catch( const YAML::ParserException& e )
+    {
+        std::stringstream msg;
+        msg << "YAML parsing error" << std::endl << e.what();
+        Parser2::log(msg.str(), print_error_msg);
+        return false;
+    }
+    return true;
+}
+
 bool Parser2::readAllKeys(const YAML::Node& node, std::vector<std::string>& keys,
                           bool print_error_msg)
 {

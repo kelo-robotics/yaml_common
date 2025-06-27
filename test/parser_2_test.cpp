@@ -695,3 +695,19 @@ TEST(Parser2Test, sequence)
     EXPECT_EQ(truth_pt_vec, pt_vec);
 #endif // USE_GEOMETRY_COMMON
 }
+
+TEST(Parser2Test, loadString)
+{
+    const std::string s = "{i: 5, f: 5.5, b: true, s: abc, v: [1,2,3]}";
+    YAML::Node node;
+    EXPECT_EQ(Parser::loadString(s, node), true);
+    EXPECT_EQ(node["i"].as<int>(), 5);
+    EXPECT_EQ(node["f"].as<float>(), 5.5f);
+    EXPECT_EQ(node["b"].as<bool>(), true);
+    EXPECT_EQ(node["s"].as<std::string>(), "abc");
+    EXPECT_EQ(node["v"].as<std::vector<int>>(), std::vector<int>({1,2,3}));
+
+    YAML::Node node2;
+    EXPECT_EQ(Parser::loadString("{{}", node2), false);
+    std::cout << node2 << std::endl;
+}

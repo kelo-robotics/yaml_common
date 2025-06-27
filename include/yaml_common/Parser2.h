@@ -75,6 +75,20 @@ class Parser2
                 bool print_error_msg = true);
 
         /**
+         * @brief Load a string with error checking
+         *
+         * @param s string to be parsed
+         * @param node YAML node where the string's content will be read to
+         * @param print_error_msg decides whether to print error message when
+         * loading is unsuccessful.
+         * @return bool success in loading the string
+         */
+        static bool loadString(
+                const std::string& s,
+                YAML::Node& node,
+                bool print_error_msg = true);
+
+        /**
          * @brief Read value of `node`[`key`] into `value` when possible
          *
          * example:
