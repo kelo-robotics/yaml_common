@@ -41,10 +41,10 @@
 #ifndef KELO_YAML_COMMON_PARSER_2_H
 #define KELO_YAML_COMMON_PARSER_2_H
 
-#include <yaml-cpp/yaml.h>
+#include "yaml-cpp/yaml.h"
 
 #ifdef USE_GEOMETRY_COMMON
-#include <yaml_common/conversions/GeometryCommon.h>
+#include "yaml_common/conversions/GeometryCommon.h"
 #endif // USE_GEOMETRY_COMMON
 
 namespace kelo

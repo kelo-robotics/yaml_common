@@ -1,39 +1,9 @@
-cmake_minimum_required(VERSION 3.5.1)
+cmake_minimum_required(VERSION 3.28.3)
 project(yaml_common)
 
-add_compile_options(-std=c++11 -Wall -Wextra)
+add_compile_options(-std=c++17 -Wall -Wextra)
 
 option(BUILD_WITH_GEOMETRY_COMMON "Build with geometry_common as dependency" ON)
-
-if (WIN32)
-    find_package(yaml-cpp REQUIRED)
-else (WIN32)
-    set(YAML_CPP_LIBRARIES yaml-cpp)
-endif (WIN32)
-
-set(dependency "")
-if(BUILD_WITH_GEOMETRY_COMMON)
-    set(dependency ${dependency} geometry_common)
-    message("Building with geometry_common dependency")
-    add_definitions(-DUSE_GEOMETRY_COMMON)
-endif(BUILD_WITH_GEOMETRY_COMMON)
-
-find_package(catkin REQUIRED COMPONENTS
-    ${dependency}
-)
-
-find_package (yaml-cpp REQUIRED)
-
-catkin_package(
-    CATKIN_DEPENDS
-        ${dependency}
-    INCLUDE_DIRS
-        include
-        ${YAML_CPP_INCLUDE_DIRS}
-    LIBRARIES
-        yaml_common
-        ${YAML_CPP_LIBRARIES}
-)
 
 # The documentation build option set to OFF by default
 option(BUILD_DOC "Build documentation" OFF)
@@ -60,48 +30,77 @@ if(BUILD_DOC)
     endif (DOXYGEN_FOUND)
 endif(BUILD_DOC)
 
-include_directories(
-    include
-    ${catkin_INCLUDE_DIRS}
-    ${YAML_CPP_INCLUDE_DIRS}
-)
+find_package(ament_cmake REQUIRED)
+find_package(yaml-cpp REQUIRED)
+
+# Optionally find geometry_common
+set(dependency "")
+if(BUILD_WITH_GEOMETRY_COMMON)
+    set(dependency ${dependency} geometry_common)
+    add_definitions(-DUSE_GEOMETRY_COMMON)
+    find_package(${dependency})
+else(BUILD_WITH_GEOMETRY_COMMON)
+    message("Building WITHOUT geometry_common dependency")
+endif(BUILD_WITH_GEOMETRY_COMMON)
 
 # =========
 # LIBRARIES
 # =========
 set(source_files
-    src/Parser.cpp
     src/Parser2.cpp
+)
+set(link_libraries
+    yaml-cpp::yaml-cpp
 )
 
 if(BUILD_WITH_GEOMETRY_COMMON)
     set(source_files ${source_files} src/conversions/GeometryCommon.cpp)
+    set(link_libraries ${link_libraries} geometry_common::geometry_common)
 endif(BUILD_WITH_GEOMETRY_COMMON)
 
 add_library(yaml_common
     ${source_files}
 )
-target_link_libraries(yaml_common
-    ${catkin_LIBRARIES}
-    ${YAML_CPP_LIBRARIES}
+target_include_directories(yaml_common PUBLIC
+   "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+   "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>")
+target_link_libraries(yaml_common PUBLIC
+    ${link_libraries}
+)
+
+# =======
+# INSTALL
+# =======
+install(
+    TARGETS
+        yaml_common
+    EXPORT
+        export_yaml_common
+    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib
+    RUNTIME DESTINATION bin
+)
+
+install(
+    DIRECTORY
+        include/
+    DESTINATION
+        include/${PROJECT_NAME}
 )
 
 # =====
 # TESTS
 # =====
-if (CATKIN_ENABLE_TESTING)
+if (BUILD_TESTING)
     add_subdirectory(test)
 endif ()
 
 
-# =======
-# INSTALL
-# =======
-install(TARGETS yaml_common
-  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
-
-install(DIRECTORY include/${PROJECT_NAME}/
-  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+ament_export_dependencies(
+    yaml-cpp
+    ${dependency}
 )
+
+ament_export_targets(export_yaml_common)
+
+ament_package()
