@@ -11,7 +11,7 @@ A ROS package with helper functions to parse and manipulate YAML data
 
 To build without `geometry_common`, execute
 ```bash
-catkin build yaml_common -DBUILD_WITH_GEOMETRY_COMMON=OFF
+colcon build --packages-up-to yaml_common --cmake-args -DBUILD_WITH_GEOMETRY_COMMON=OFF
 ```
 
 ## Documentation
@@ -28,7 +28,7 @@ We use [Doxygen](https://www.doxygen.nl/index.html) for code documentation.
 
 - Documentation can be built using the flag `-DBUILD_DOC=ON`
   ```bash
-  catkin build yaml_common -DBUILD_DOC=ON
+  colcon build --packages-up-to yaml_common --cmake-args -DBUILD_DOC=ON
   ```
 
 - The documentation will be generated at
@@ -39,7 +39,7 @@ We use [Doxygen](https://www.doxygen.nl/index.html) for code documentation.
 Run unit tests with
 
 ```bash
-catkin test --this
+colcon test --packages-up-to yaml_common --event-handlers console_direct+
 ```
 
 **Note**: Requires `GTest` package (`sudo apt install libgtest-dev`)

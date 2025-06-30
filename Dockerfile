@@ -1,31 +1,24 @@
-FROM ros:noetic
+FROM ros:jazzy
 
 SHELL [ "/bin/bash", "-c" ]
 
 # Install dependencies
 RUN apt-get -qq update > /dev/null && \
-    apt-get -yqq install git \
-                         python3-catkin-tools \
-                         ros-$ROS_DISTRO-catkin \
-                         ros-$ROS_DISTRO-tf \
-                         ros-$ROS_DISTRO-tf2-geometry-msgs \
-                         libyaml-cpp-dev > /dev/null && \
-    apt-get clean > /dev/null
-
-WORKDIR /workspace/catkin_ws/src
+    apt-get -yqq install git > /dev/null
 
 # Clone dependencies
-RUN git clone https://github.com/kelo-robotics/geometry_common.git
+WORKDIR /workspace/ros2_ws/src
+RUN git clone -b ros2 https://github.com/kelo-robotics/geometry_common.git
 
 # Copy the yaml_common source code to the docker container
-WORKDIR /workspace/catkin_ws/src/yaml_common
-ADD . /workspace/catkin_ws/src/yaml_common/
+WORKDIR /workspace/ros2_ws/src/yaml_common
+COPY . .
 
-# Compile the ROS catkin workspace
-# RUN cd /workspace/catkin_ws && \
-#     /ros_entrypoint.sh catkin build --no-status
+# Build
+WORKDIR /workspace/ros2_ws
+RUN /ros_entrypoint.sh colcon build
 
-# Run unit tests
-# RUN source /workspace/catkin_ws/devel/setup.bash && \
-#     cd /workspace/catkin_ws/src/yaml_common && \
-#     catkin test --this --no-status
+# Test
+RUN . install/setup.bash && colcon test --packages-up-to yaml_common --event-handlers console_direct+
+RUN mkdir /test_results
+RUN cp /workspace/ros2_ws/build/yaml_common/test_results/yaml_common/yaml_common_test.gtest.xml /test_results/
