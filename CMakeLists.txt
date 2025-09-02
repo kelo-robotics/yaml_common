@@ -47,6 +47,7 @@ endif(BUILD_WITH_GEOMETRY_COMMON)
 # LIBRARIES
 # =========
 set(source_files
+    src/Parser.cpp
     src/Parser2.cpp
 )
 set(link_libraries
